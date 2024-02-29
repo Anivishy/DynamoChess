@@ -71,13 +71,16 @@ def get_games(seed_user):
 
     return games_json
 
-def sort_games(user_games): 
+for user in unchecked_users:
+    user_games = get_games(user)
+    users_database.append(user)
+    unchecked_users.remove(user)
     for game in user_games:
         try:
             if game['id'] in game_ids or game['source'] == 'ai':
                 pass
             else:
-                #pprint(game)
+                pprint(game)
                 black = game['players']['black']
                 white = game['players']['white']
                 game_id = game['id']
