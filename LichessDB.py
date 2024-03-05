@@ -51,8 +51,8 @@ users_database = []
 game_ids = []
 unchecked_users.append(seed_name)
 
-def get_games(seed_user):
-    seed_games = requests.get(update_games_url(seed_user),
+async def get_games(seed_user):
+    seed_games = await requests.get(update_games_url(seed_user),
                 params = {
                     'max': 1000
                 },
@@ -71,16 +71,13 @@ def get_games(seed_user):
 
     return games_json
 
-for user in unchecked_users:
-    user_games = get_games(user)
-    users_database.append(user)
-    unchecked_users.remove(user)
+def sort_games(user_games): 
     for game in user_games:
         try:
             if game['id'] in game_ids or game['source'] == 'ai':
                 pass
             else:
-                pprint(game)
+                #pprint(game)
                 black = game['players']['black']
                 white = game['players']['white']
                 game_id = game['id']
