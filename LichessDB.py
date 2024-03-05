@@ -51,17 +51,16 @@ users_database = []
 game_ids = []
 unchecked_users.append(seed_name)
 
-async def get_games(seed_user):
-    seed_games = await requests.get(update_games_url(seed_user),
+def get_games(seed_user):
+    seed_games = requests.get(update_games_url(seed_user),
                 params = {
-                    'max': 1000
+                    'max': 10
                 },
                 headers = {
                     'Authorization': f'Bearer {lichess_key}',
                     'Accept': 'application/x-ndjson'
                 }                         
     )
-
     games_json = []
 
     ndjson = seed_games.content.decode().split('\n')
@@ -138,7 +137,7 @@ def sort_games(user_games):
 background_tasks = []
 fetch_gamehistory_threads = []
 sorting_threads = []
-work_queue = asyncio.Queue()
+# work_queue = asyncio.Queue()
 
 while True:
     while threading.active_count() < 100:
@@ -146,32 +145,31 @@ while True:
             user = unchecked_users[0]
             #print("User: " + user)
             # try:
-            # t1 = ThreadWithReturnValue(target = get_games, args = [user])
-            # t1.start()
-            # fetch_gamehistory_threads.append(t1)
-            # user_games = t1.join()
-            fetch_user_games = asyncio.run(get_games(user))
-            background_tasks.append(fetch_user_games)
-            done, pending = asyncio.wait(background_tasks)
-            #pprint(user_games)
-            for task in done:
-                try:
-                    user_games = task.result()
-                    users_database.append(user)
-                    unchecked_users.remove(user)
-                    t2 = threading.Thread(target = sort_games, args = [user_games])
-                    #pprint(t2)
-                    t2.start()
-                    sorting_threads.append(t2)
-                    for thread in sorting_threads:
-                        thread.join()
-                    #print("Count: " + str(threading.active_count()))
-                    # except:
-                    #     pass
-                        # for thread in threading.enumerate(): 
-                        #     print(thread.name)
-                except:
-                    pass
+            t1 = ThreadWithReturnValue(target = get_games, args = [user])
+            t1.start()
+            fetch_gamehistory_threads.append(t1)
+            user_games = t1.join()
+            # fetch_user_games = asyncio.run(get_games(user))
+            # background_tasks.append(fetch_user_games)
+            # pprint(asyncio.wait(background_tasks).done())
+            # done = []
+            # for task in done:
+            try:
+                users_database.append(user)
+                unchecked_users.remove(user)
+                t2 = threading.Thread(target = sort_games, args = [user_games])
+                #pprint(t2)
+                t2.start()
+                sorting_threads.append(t2)
+                for thread in sorting_threads:
+                    thread.join()
+                #print("Count: " + str(threading.active_count()))
+                # except:
+                #     pass
+                    # for thread in threading.enumerate(): 
+                    #     print(thread.name)
+            except:
+                pass
 
 # for thread in threads:
 #     thread.join()
