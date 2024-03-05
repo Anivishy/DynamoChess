@@ -51,8 +51,8 @@ users_database = []
 game_ids = []
 unchecked_users.append(seed_name)
 
-def get_games(seed_user):
-    seed_games = requests.get(update_games_url(seed_user),
+async def get_games(seed_user):
+    seed_games = await requests.get(update_games_url(seed_user),
                 params = {
                     'max': 1000
                 },
