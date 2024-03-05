@@ -1,12 +1,18 @@
 import chess
 import pygame
 from ui import UI
+from Movemaker import Movemaker
 pygame.init()
 written_board = chess.Board()
 size = 600
+square_size = size / 8
+movemaker = Movemaker()
+
+
 
 
 def game_loop():
+    turn = 1
     game_ui = UI(size)
     game_over = False
     while not game_over:
@@ -14,6 +20,12 @@ def game_loop():
             if event.type == pygame.QUIT:
                 game_over = True
                 pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                movemaker.set_current_piece_pos(pygame.mouse.get_pos(), game_ui.board, square_size)
+                movemaker.change_state()
+            if event.type == pygame.MOUSEBUTTONUP:
+                movemaker.change_state()
+
 
         '''
         print((written_board))
@@ -27,6 +39,8 @@ def game_loop():
         print((written_board))'''
         game_ui.draw_grid()
         pygame.display.update()
+        turn += 1
+        
 
 if __name__ == '__main__':
     game_loop()

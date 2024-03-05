@@ -21,7 +21,6 @@ class UI:
     
     def draw_grid(self):
         for key, value in self.board.items():
-            print(value)
             for i in range(0, len(value)):
                 if (key + i) % 2 == 0:
                     pygame.draw.rect(self.screen, WHITE, (self.tile_size * i, self.tile_size * abs(8 - key), self.tile_size, self.tile_size))
