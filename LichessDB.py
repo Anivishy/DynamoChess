@@ -54,7 +54,7 @@ unchecked_users.append(seed_name)
 def get_games(seed_user):
     seed_games = requests.get(update_games_url(seed_user),
                 params = {
-                    'max': 10
+                    'max': 1000
                 },
                 headers = {
                     'Authorization': f'Bearer {lichess_keys[random.randint(0,1)]}',
