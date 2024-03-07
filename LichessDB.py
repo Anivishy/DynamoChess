@@ -9,10 +9,10 @@ import torch
 import threading
 from threading import Thread
 import asyncio
-
+import random
 import concurrent.futures
 
-lichess_key = 'lip_C5pUNarDHGmLKHnTcvus'
+lichess_keys = ['lip_C5pUNarDHGmLKHnTcvus', 'lip_srkSX7kbp0WUc941Gxg8']
 seed_name = 'drnykterstein'
 following_url = 'https://lichess.org/api/rel/following'
 
@@ -54,10 +54,10 @@ unchecked_users.append(seed_name)
 def get_games(seed_user):
     seed_games = requests.get(update_games_url(seed_user),
                 params = {
-                    'max': 10
+                    'max': 1000
                 },
                 headers = {
-                    'Authorization': f'Bearer {lichess_key}',
+                    'Authorization': f'Bearer {lichess_keys[random.randint(0,1)]}',
                     'Accept': 'application/x-ndjson'
                 }                         
     )
@@ -130,6 +130,11 @@ def sort_games(user_games):
         #     f.write('%s:%s\n' % (key, value))
         for k in games.keys():
             f.write("'{}':'{}'\n".format(k, games[k]))
+
+    # with open("savefile.txt", 'r') as f:
+    #     content = f.readlines()
+    #     unchecked_users = content[0][1:len(content[0])]
+        
         
 
 # 1000 - 1399, 1400 - 1799, 1800 - 2199, 2200 - 2599, 2600 - 2999, 3000 - 3399, 3400 - 3799
@@ -156,6 +161,7 @@ while True:
             # for task in done:
             try:
                 users_database.append(user)
+                #with open("savefile.txt", 'w') as f:
                 unchecked_users.remove(user)
                 t2 = threading.Thread(target = sort_games, args = [user_games])
                 #pprint(t2)
