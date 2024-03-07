@@ -166,3 +166,4 @@ cython_debug/
 /data
 /other_test_stuff
 /models
+__pycache__
