@@ -54,7 +54,7 @@ unchecked_users.append(seed_name)
 def get_games(seed_user):
     seed_games = requests.get(update_games_url(seed_user),
                 params = {
-                    'max': 10
+                    'max': 1000
                 },
                 headers = {
                     'Authorization': f'Bearer {lichess_keys[random.randint(0,1)]}',
@@ -161,6 +161,7 @@ while True:
             # for task in done:
             try:
                 users_database.append(user)
+                #with open("savefile.txt", 'w') as f:
                 unchecked_users.remove(user)
                 t2 = threading.Thread(target = sort_games, args = [user_games])
                 #pprint(t2)
