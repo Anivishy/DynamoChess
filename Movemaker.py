@@ -9,10 +9,13 @@ class Movemaker():
     def change_state(self):
         self.mouse_state = 1 - self.mouse_state
     
-    def set_current_piece_pos(self, coords, board, square_size):
-        x, y = ceil(coords[0] / square_size), 9 - ceil(coords[1] / square_size)
+    def get_state(self):
+        return self.mouse_state
+    
+    def get_current_piece_pos(self, coords, board, square_size):
+        x, y = floor(coords[0] / square_size), floor(coords[1] / square_size)
         cur_letter = letters[x - 1]
-        print(cur_letter, y)
+        return x, y, cur_letter
         
 
 
