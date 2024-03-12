@@ -2,6 +2,7 @@ import pygame
 from math import *
 BROWN = (50, 50, 50)
 WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
 
 ROOK_W = 'PieceImages/white_rook.png'
 KNIGHT_W = 'PieceImages/white_knight.png'
@@ -22,16 +23,17 @@ class UI:
         self.size = size
         self.tile_size = (self.size / 8)
         self.positioner = 0.1
-        self.board = {
-            8: ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-            7: ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            6: ['', '', '', '', '', '', '', ''],
-            5: ['', '', '', '', '', '', '', ''],
-            4: ['', '', '', '', '', '', '', ''],
-            3: ['', '', '', '', '', '', '', ''],
-            2: ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            1: ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-        }
+        self.selected_square = (None, None)
+        self.board = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
+        ]
         self.screen = pygame.display.set_mode((size, size))
         self.piece_size = (int(self.tile_size - self.tile_size * self.positioner), int(self.tile_size - self.tile_size * self.positioner))
         self.piece_images = {
@@ -50,17 +52,33 @@ class UI:
         }
     
     def draw_grid(self):
-        for key, value in self.board.items():
-            for i in range(0, len(value)):
-                if (key + i) % 2 == 0:
-                    pygame.draw.rect(self.screen, WHITE, (self.tile_size * i, self.tile_size * abs(8 - key), self.tile_size, self.tile_size))
+        for y in range(len(self.board)):
+            for x in range(0, len(self.board[y])):
+                if x == self.selected_square[0] and y == self.selected_square[1]:
+                    pygame.draw.rect(self.screen, BLUE, (self.tile_size * x, self.tile_size * y, self.tile_size, self.tile_size))
+                elif (x + y) % 2 == 0:
+                    pygame.draw.rect(self.screen, WHITE, (self.tile_size * x, self.tile_size * y, self.tile_size, self.tile_size))
                 else:
-                    pygame.draw.rect(self.screen, BROWN, (self.tile_size * i, self.tile_size * abs(8 - key), self.tile_size, self.tile_size))
+                    pygame.draw.rect(self.screen, BROWN, (self.tile_size * x, self.tile_size * y, self.tile_size, self.tile_size))
 
     def draw_pieces(self):
-        for key, value in self.board.items():
-            for i in range(0, len(value)):
-                if value[i] != '':
-                    self.screen.blit(self.piece_images[value[i]], 
-                    (i * self.tile_size + self.tile_size * self.positioner / 2, (8 - key) * self.tile_size + self.tile_size * self.positioner / 2))
-                
+        for y in range(len(self.board)):
+            for x in range(0, len(self.board[y])):
+                if self.board[y][x] != '':
+                    self.screen.blit(self.piece_images[self.board[y][x]], 
+                    (x * self.tile_size + self.tile_size * self.positioner / 2, y * self.tile_size + self.tile_size * self.positioner / 2))
+    
+    def selected_piece_movement(self, new_pos):
+        curr_pos = (new_pos[0],new_pos[1])
+        piece = self.board[self.selected_square[1]][self.selected_square[0]]
+        self.board[curr_pos[1]][curr_pos[0]] = piece
+        self.board[self.selected_square[1]][self.selected_square[0]] = ''
+    
+    def set_selected_square(self, square):
+        if square == None:
+            self.selected_square = (None, None)
+        else:
+            self.selected_square = (square[0], square[1])
+
+    def get_seleceted_square(self):
+        return self.selected_square
