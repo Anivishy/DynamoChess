@@ -13,6 +13,7 @@ translator = Translator(all_moves)
 
 print(chess.Move.from_uci("e2e5") in written_board.legal_moves)
 print(written_board.san(chess.Move.from_uci("g1f3")))
+print(written_board.parse_san('e4'))
 
 def game_loop():
     pgn_moves = []
@@ -32,10 +33,10 @@ def game_loop():
                     movemaker.change_state()
                 else:
                     new_pos = movemaker.get_current_piece_pos(pygame.mouse.get_pos(), game_ui.board, square_size)
-                    screen_move, promotion = translator.get_move_from_screen(game_ui.get_seleceted_square(), new_pos, game_ui.board)
+                    screen_move, promotion, castle_detection = translator.get_move_from_screen(game_ui.get_seleceted_square(), new_pos, game_ui.board)
                     chess_move = chess.Move.from_uci(screen_move)
                     if chess_move in written_board.legal_moves:
-                        game_ui.selected_piece_movement(new_pos, screen_move, promotion)
+                        game_ui.selected_piece_movement(new_pos, screen_move, promotion, castle_detection)
                         pgn_moves.append(written_board.san(chess_move))
                         written_board.push(chess_move)
                     game_ui.set_selected_square(None)
