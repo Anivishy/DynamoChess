@@ -11,6 +11,7 @@ class Translator:
         return self.moves
     
     def get_move_from_screen(self, first_pos, new_pos, board):
+        castling = self.castle_detection(first_pos, new_pos, board)
         promotion = ''
         first_letter = letters[first_pos[0]]
         second_letter = letters[new_pos[0]]
@@ -22,5 +23,12 @@ class Translator:
             string += 'q'
             promotion = 'q'
         if string[0:2] == string[2:4]:
-            return '0000'
-        return string, promotion
+            return '0000', promotion, castling
+        return string, promotion, castling
+           
+    
+    def castle_detection(self, first_pos, new_pos, board):
+        if board[first_pos[1]][first_pos[0]].lower() == 'k':
+            if abs(first_pos[0] - new_pos[0]) == 2:
+                return new_pos[0] - first_pos[0]
+        return None
