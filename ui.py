@@ -68,9 +68,11 @@ class UI:
                     self.screen.blit(self.piece_images[self.board[y][x]], 
                     (x * self.tile_size + self.tile_size * self.positioner / 2, y * self.tile_size + self.tile_size * self.positioner / 2))
     
-    def selected_piece_movement(self, new_pos):
+    def selected_piece_movement(self, new_pos, screen_move, promotion):
         curr_pos = (new_pos[0],new_pos[1])
         piece = self.board[self.selected_square[1]][self.selected_square[0]]
+        if promotion != '':
+            piece = promotion
         self.board[curr_pos[1]][curr_pos[0]] = piece
         self.board[self.selected_square[1]][self.selected_square[0]] = ''
     

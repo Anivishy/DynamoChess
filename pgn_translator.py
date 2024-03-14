@@ -10,8 +10,17 @@ class Translator:
     def get_moves(self):
         return self.moves
     
-    def get_move_from_screen(self, first_pos, new_pos):
+    def get_move_from_screen(self, first_pos, new_pos, board):
+        promotion = ''
         first_letter = letters[first_pos[0]]
         second_letter = letters[new_pos[0]]
         string = first_letter + str(8 - first_pos[1]) + second_letter + str(8 - new_pos[1])
-        return string
+        if (board[first_pos[1]][first_pos[0]] == 'P' and new_pos[1] == 0): # promotion
+            string += 'q' # placeholder for queen
+            promotion = 'Q'
+        if (board[first_pos[1]][first_pos[0]] == 'p' and new_pos[1] == 7):
+            string += 'q'
+            promotion = 'q'
+        if string[0:2] == string[2:4]:
+            return '0000'
+        return string, promotion
