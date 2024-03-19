@@ -9,7 +9,7 @@ written_board = chess.Board()
 size = 800
 square_size = size / 8
 movemaker = Movemaker()
-all_moves = 'e4 e5 Nf3 Nc6 Bb5 g6 O-O Bg7 c3 a6 Ba4 b5 Bc2 Nf6 d4 d6 dxe5 Nxe5 Nxe5 dxe5 Qxd8+ Kxd8 a4 Bb7 f3 Nd7 Be3 h5 Nd2 Bh6 Bxh6 Rxh6 Rfd1 Ke7 Nb3 Rhh8 Na5 Rab8 axb5 axb5 b4 Rhd8 Kf2 Nb6 Rxd8 Kxd8 Bb3 Ke7 Ke3 Ba8 h4 f5 Bc2 f4+ Ke2 Rg8 Bd3 g5 hxg5 Rxg5 Kf2 c6 Nb3 Bb7 Ra7'
+all_moves = 'e4 e5 Nf3 Nc6 d4 exd4 c3 Nf6 e5 Qe7 cxd4 Qb4+ Bd2 Qxb2 exf6 Qxa1 Bc3 Qxa2 Bb5 Qe6+ Kd2 gxf6 Re1 Ne5 dxe5 fxe5 Rxe5 Qxe5 Nxe5 Be7 Qh5 Rf8 Bc4 d6 Nxf7 Kd7 Qf5+ Ke8 Qh5 Kd7 f4 c5 Qf5+ Kc6 Qxh7 b5 Qg6 bxc4 Ne5+ Kb7 Nxc4 Rxf4 Na5+ Kb8 Qg7 Rf2+ Ke3 Rxg2 Nc6+ Kb7 Qxe7+ Kxc6 Qe4+ Kc7 Qxg2 Kb8 Qg7 Bb7 Be5 Kc8 Bxd6 Bc6 Qc7#'
 translator = Translator(all_moves)
 
 #print(chess.Move.from_uci("e2e5") in written_board.legal_moves)
@@ -26,6 +26,7 @@ def automated_move(turn, moves, game_ui):
         if chess_move in written_board.legal_moves:
             game_ui.selected_piece_movement(second_coord, first_coord, promotion, castle_detection)
             written_board.push(chess_move)
+        time.sleep(1)
 
 def game_loop():
     pgn_moves = []
@@ -71,7 +72,6 @@ def game_loop():
         game_ui.draw_grid()
         game_ui.draw_pieces()
         pygame.display.update()
-        time.sleep(1)
         turn += 1
         
 
