@@ -14,6 +14,35 @@ import concurrent.futures
 
 from chessdotcom import *
 import webbrowser
+
+urls = []
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######################################################
+                    ###OLD CODE###
+######################################################
 #from chessdotcom.aio import get_player_profile, Client
 # Client.aio = True
 
@@ -31,17 +60,17 @@ import webbrowser
 # responses = asyncio.run(gather_cors(cors))
 
 
-Client.request_config["headers"]["User-Agent"] = (
-    "asgasdf"
-    "asgasdfsd"
-)
+# Client.request_config["headers"]["User-Agent"] = (
+#     "asgasdf"
+#     "asgasdfsd"
+# )
 
-response = get_player_game_archives("Hikaru")
-pprint(response)
+# response = get_player_game_archives("Hikaru")
+# pprint(response)
 
-response = response.__getattribute__('json')['archives'][0]
+# response = response.__getattribute__('json')['archives'][0]
 
-pprint(response)
+# pprint(response)
 
 
 # data = {"archives"}
