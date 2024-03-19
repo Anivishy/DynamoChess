@@ -32,3 +32,6 @@ class Translator:
             if abs(first_pos[0] - new_pos[0]) == 2:
                 return new_pos[0] - first_pos[0]
         return None
+    
+    def pgn_to_uci(self, pgn_move, board):
+        return str(board.parse_san(pgn_move))
