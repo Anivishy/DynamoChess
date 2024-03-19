@@ -68,13 +68,13 @@ class UI:
                     self.screen.blit(self.piece_images[self.board[y][x]], 
                     (x * self.tile_size + self.tile_size * self.positioner / 2, y * self.tile_size + self.tile_size * self.positioner / 2))
     
-    def selected_piece_movement(self, new_pos, screen_move, promotion, castle_detection):
+    def selected_piece_movement(self, new_pos, first_pos, promotion, castle_detection):
         curr_pos = (new_pos[0],new_pos[1])
-        piece = self.board[self.selected_square[1]][self.selected_square[0]]
+        piece = self.board[first_pos[1]][first_pos[0]]
         if promotion != '':
             piece = promotion
         self.board[curr_pos[1]][curr_pos[0]] = piece
-        self.board[self.selected_square[1]][self.selected_square[0]] = ''
+        self.board[first_pos[1]][first_pos[0]] = ''
         self.move_rook_for_castle(castle_detection, curr_pos)
 
     def move_rook_for_castle(self, castle_detection, curr_pos):

@@ -35,3 +35,8 @@ class Translator:
     
     def pgn_to_uci(self, pgn_move, board):
         return str(board.parse_san(pgn_move))
+    
+    def uci_to_coordinates(self, uci_move):
+        first_coord = [letters.index(uci_move[0]), 8 - int(uci_move[1])]
+        second_coord = [letters.index(uci_move[2]), 8 - int(uci_move[3])]
+        return first_coord, second_coord
