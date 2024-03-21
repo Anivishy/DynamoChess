@@ -2,6 +2,7 @@ import chess
 import pygame
 import time
 from ui import UI
+import random
 from pgn_translator import Translator
 from Movemaker import Movemaker
 pygame.init()
@@ -16,7 +17,17 @@ translator = Translator(all_moves)
 def automated_move(turn, moves, game_ui):
     if turn < len(moves):
         move = moves[turn]
-        uci = translator.pgn_to_uci(move, written_board)
+        #uci = translator.pgn_to_uci(move, written_board)
+        uci = None
+        ind = random.randint(0, (written_board.legal_moves.count() - 1))
+        for move in written_board.legal_moves:
+            if ind > 0:
+                pass
+            else:
+                uci = move.uci()
+                break
+            ind -= 1
+        #print(written_board.legal_moves[ind])
         chess_move = chess.Move.from_uci(uci)
         first_coord, second_coord = translator.uci_to_coordinates(uci)
         screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
@@ -24,6 +35,7 @@ def automated_move(turn, moves, game_ui):
             game_ui.selected_piece_movement(second_coord, first_coord, promotion, castle_detection)
             written_board.push(chess_move)
         time.sleep(0.75)
+        
 
 def game_loop():
     pgn_moves = []
@@ -31,6 +43,7 @@ def game_loop():
     game_ui = UI(size)
     game_over = False
     selected_piece = None
+    ai_move = False
     moves = all_moves.split(' ')
     while not game_over:
         for event in pygame.event.get():
@@ -50,15 +63,25 @@ def game_loop():
                         game_ui.selected_piece_movement(new_pos, selected_piece, promotion, castle_detection)
                         pgn_moves.append(written_board.san(chess_move))
                         written_board.push(chess_move)
+                        turn += 1
+                        ai_move = True
                     game_ui.set_selected_square(None)
                     movemaker.change_state()
                     
+                    
+                    
         
-        automated_move(turn, moves, game_ui)
+        #automated_move(turn, moves, game_ui)
         game_ui.draw_grid()
         game_ui.draw_pieces()
         pygame.display.update()
-        turn += 1
+
+        if ai_move:
+            automated_move(turn, moves, game_ui)
+            ai_move = False
+
+        
+        
         
 
 if __name__ == '__main__':
