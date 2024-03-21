@@ -75,16 +75,16 @@ class UI:
             piece = promotion
         self.board[curr_pos[1]][curr_pos[0]] = piece
         self.board[first_pos[1]][first_pos[0]] = ''
-        self.move_rook_for_castle(castle_detection, curr_pos)
+        self.move_rook_for_castle(castle_detection, curr_pos, first_pos)
 
-    def move_rook_for_castle(self, castle_detection, curr_pos):
+    def move_rook_for_castle(self, castle_detection, curr_pos, first_pos):
         if castle_detection != None:
             if castle_detection > 0: # castling to the right
-                self.board[self.selected_square[1]][curr_pos[0] - 1] = self.board[self.selected_square[1]][7]
-                self.board[self.selected_square[1]][7] = ''
+                self.board[first_pos[1]][curr_pos[0] - 1] = self.board[first_pos[1]][7]
+                self.board[first_pos[1]][7] = ''
             elif castle_detection < 0: # castling to the left
-                self.board[self.selected_square[1]][curr_pos[0] + 1] = self.board[self.selected_square[1]][0]
-                self.board[self.selected_square[1]][0] = ''
+                self.board[first_pos[1]][curr_pos[0] + 1] = self.board[first_pos[1]][0]
+                self.board[first_pos[1]][0] = ''
     
     def set_selected_square(self, square):
         if square == None:
