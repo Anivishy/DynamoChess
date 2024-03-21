@@ -9,7 +9,7 @@ written_board = chess.Board()
 size = 800
 square_size = size / 8
 movemaker = Movemaker()
-all_moves = 'e4 e5 Nf3 Nc6 d4 exd4 c3 Nf6 e5 Qe7 cxd4 Qb4+ Bd2 Qxb2 exf6 Qxa1 Bc3 Qxa2 Bb5 Qe6+ Kd2 gxf6 Re1 Ne5 dxe5 fxe5 Rxe5 Qxe5 Nxe5 Be7 Qh5 Rf8 Bc4 d6 Nxf7 Kd7 Qf5+ Ke8 Qh5 Kd7 f4 c5 Qf5+ Kc6 Qxh7 b5 Qg6 bxc4 Ne5+ Kb7 Nxc4 Rxf4 Na5+ Kb8 Qg7 Rf2+ Ke3 Rxg2 Nc6+ Kb7 Qxe7+ Kxc6 Qe4+ Kc7 Qxg2 Kb8 Qg7 Bb7 Be5 Kc8 Bxd6 Bc6 Qc7#'
+all_moves = 'e4 g6 d4 Bg7 Nc3 c6 Nf3 d6 Be3 Nf6 Qd2 b5 Bh6 Bxh6 Qxh6 b4 Ne2 Nxe4 Qg7 Rf8 Ng3 Nf6 O-O-O Be6 Ng5 Bxa2 Nxh7 Nxh7 Qxh7 Nd7 h4 Qa5 h5 Nf6 Qh6 g5 d5 Bxd5 Qxg5 Qa1+ Kd2 Qxb2 Qe3 a5 h6 Ng4 Qf4 Qc3+ Kc1 b3 Bd3 b2+ Kb1 a4 Ne2 Qa3 c4 Ne5 Qd4 Nxd3 Rxd3 Qa1+ Kc2 Qxh1 cxd5 b1=Q+ Kd2 Qhd1+ Ke3 Qdxd3+ Qxd3 Qxd3+ Kxd3 a3 h7 a2 h8=Q Rxh8'
 translator = Translator(all_moves)
 
 #print(chess.Move.from_uci("e2e5") in written_board.legal_moves)
@@ -23,10 +23,11 @@ def automated_move(turn, moves, game_ui):
         chess_move = chess.Move.from_uci(uci)
         first_coord, second_coord = translator.uci_to_coordinates(uci)
         screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
+        print(first_coord, second_coord, promotion, castle_detection, uci, move, chess_move)
         if chess_move in written_board.legal_moves:
             game_ui.selected_piece_movement(second_coord, first_coord, promotion, castle_detection)
             written_board.push(chess_move)
-        time.sleep(1)
+        time.sleep(0.75)
 
 def game_loop():
     pgn_moves = []
