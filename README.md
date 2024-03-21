@@ -15,6 +15,14 @@ Start with a well followed user, find all the followers and the followers of the
 Possible Backup Plan?
 -	Create some form of a chess bot on our own
 
+Sprint #1:
+
+Goals:
+  1: Finish data scrappers and collect data
+  2: Finish pgn translators (UI)
+  3: Basic algorithimic AI
+  4: Experiment with differend ML architectures and try training + evaluating accuracy 
+
 Vague Timeline:
 
 By Start of April
