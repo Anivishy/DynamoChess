@@ -17,6 +17,15 @@ QUEEN = 'PieceImages/black_queen.png'
 KING = 'PieceImages/black_king.png'
 PAWN = 'PieceImages/black_pawn.png'
 
+piece_value = {
+    'r': 5, 
+    'n': 3, 
+    'b': 3, 
+    'q': 8,
+    'k': 10,
+    'p': 1
+}
+
 
 class UI:
     def __init__(self, size):
@@ -94,3 +103,14 @@ class UI:
 
     def get_seleceted_square(self):
         return self.selected_square
+    
+    def piece_values(self):
+        total = 0
+        for row in self.board:
+            for square in row:
+                if square != '':
+                    if square.isupper():
+                        total += -1 * piece_value[square.lower()]
+                    else:
+                        total += piece_value[square]
+        return total
