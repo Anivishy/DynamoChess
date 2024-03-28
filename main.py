@@ -15,10 +15,9 @@ movemaker = Movemaker()
 all_moves = 'd4 b6 Nc3 Bb7 Bf4 Nf6 e3 e6 Nf3 Bb4 Bd3 Bxc3+ bxc3 d6 O-O Nbd7 Re1 Qe7 e4 e5 Bg5 h6 Bxf6 Nxf6 c4 O-O d5 Nd7 g3 Nc5 Nh4 Bc8 Qf3 g5 Nf5 Qf6 g4 Bxf5 Qxf5 Qxf5 gxf5 Kg7 a4 Kf6 a5 bxa5 Rxa5 a6 Rea1 Rfb8 R5a2 g4 Kg2 Kg5 Kg3 h5 h4+ gxh3 Rh1 h4+ Kf3 a5 Rxh3 a4 Bf1 a3 Kg2 Nxe4 Raxa3 Rxa3 Rxa3 Nc5 Ra7 Rb7 Ra8 Rb2 Rh8 Rxc2 Rh7 e4 Kg1 f6 Bh3 Rxc4 Rg7+ Kf4 Rg4+ Ke5 Rxh4 Kxd5 Rh6 Ke5 Rh7 c6 Re7+ Kf4 Rf7 Rc1+ Kg2 Rc2 Kg1 Nd3 Rxf6 Nxf2 Bg2 d5 Rf8 Kg3 Rg8+ Ng4 f6 Rxg2+ Kf1 Rf2+ Ke1 Rxf6 Kd2 Kf3 Kc3 e3 Kb4 e2 Re8 Rf4+ Kc5 Re4 Rf8+ Ke3 Rg8 Ne5 Kb6 Nd3 Kc7 e1=Q Rg3+ Kd4 Rh3 Re7+ Kb6 Qb4+ Ka6 Qb5#'
 translator = Translator(all_moves)
 
-def evaluate_pos(uci, board, game_ui, depth):
-    cur_eval = None
+def evaluate_pos(uci, game_ui, depth, best_eval, best_move, original_move):
     if depth == 0:
-        return game_ui.piece_values()
+        return game_ui.piece_values(), original_move
     #new_board = deepcopy(board) # this is not a good use of space but for now its a quick solution
     #game_ui.board = new_board
     first_coord, second_coord = translator.uci_to_coordinates(uci)
@@ -27,13 +26,18 @@ def evaluate_pos(uci, board, game_ui, depth):
     written_board.push(chess.Move.from_uci(uci))
     for move in written_board.legal_moves:
         uci = move.uci()
-        cur_eval = evaluate_pos(move.uci(), game_ui.board, game_ui, depth - 1)
-        written_board.pop()
-        game_ui.board = board
+        copy = deepcopy(game_ui.board)
+        move_eval, original_move = evaluate_pos(move.uci(), game_ui, depth - 1, best_eval, best_move, original_move)
+        #print(move_eval, best_eval)
+        if move_eval > best_eval:
+            best_eval = move_eval
+            best_move = original_move
+        game_ui.board = copy
+    written_board.pop()
     #value = game_ui.piece_values()
     #print(value)
     #game_ui.board = board
-    return cur_eval
+    return best_eval, best_move
 
 def automated_move(turn, moves, game_ui):
     if turn < len(moves):
@@ -43,15 +47,14 @@ def automated_move(turn, moves, game_ui):
         ind = random.randint(0, (written_board.legal_moves.count() - 1))
         best_eval = -math.inf
         best_move = None
+        copy = deepcopy(game_ui.board)
         for move in written_board.legal_moves:
             uci = move.uci()
-            new_board = deepcopy(game_ui.board)
-            game_ui.board = new_board
-            cur_eval = evaluate_pos(move.uci(), game_ui.board, game_ui, 1)
+            cur_eval, cur_move = evaluate_pos(move.uci(), game_ui, 2, best_eval, best_move, uci)
             if cur_eval > best_eval:
                 best_eval = cur_eval
-                best_move = uci
-            
+                best_move = cur_move
+            game_ui.board = deepcopy(copy)
             '''if ind > 0:
                 pass
             else:
@@ -65,6 +68,7 @@ def play_best_move(turn, moves, game_ui):
     #print(written_board.legal_moves[ind])
     #chess_move = chess.Move.from_uci(uci)
     best_move = automated_move(turn, moves, game_ui)
+    print(best_move, game_ui.board)
     first_coord, second_coord = translator.uci_to_coordinates(best_move)
     screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
     chess_move = chess.Move.from_uci(best_move)
