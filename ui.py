@@ -104,6 +104,16 @@ class UI:
     def get_seleceted_square(self):
         return self.selected_square
     
+    def find_king(self, color):
+        for i in range(0, 8):
+            for j in range(0, 8):
+                if color:
+                    if self.board[i][j] == 'K':
+                        return (i, j)
+                else:
+                    if self.board[i][j] == 'k':
+                        return (i, j)
+    
     def piece_values(self):
         total = 0
         for row in self.board:
@@ -114,3 +124,13 @@ class UI:
                     else:
                         total += piece_value[square]
         return total
+    
+    def king_safety(self):
+        black_king_pos = self.find_king(False)
+        white_king_pos = self.find_king(True)
+        black_king_adjusted = (abs(black_king_pos[0] - 4), abs(black_king_pos[1] - 4))
+        white_king_adjusted = (abs(white_king_pos[0] + 1 - 4), abs(white_king_pos[1] - 4))
+        print(black_king_adjusted, white_king_adjusted)
+        black_king_score = black_king_adjusted[0]**2 + black_king_adjusted[1]**2
+        white_king_score = white_king_adjusted[0]**2 + white_king_adjusted[1]**2
+        return black_king_score, white_king_score
