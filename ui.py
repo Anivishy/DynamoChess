@@ -120,9 +120,9 @@ class UI:
             for square in row:
                 if square != '':
                     if square.isupper():
-                        total += -1 * piece_value[square.lower()]
+                        total += piece_value[square.lower()]
                     else:
-                        total += piece_value[square]
+                        total += -1 * piece_value[square]
         return total
     
     def king_safety(self):
