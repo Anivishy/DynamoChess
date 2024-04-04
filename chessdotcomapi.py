@@ -14,6 +14,8 @@ import random
 import concurrent.futures
 import requests
 import xmltojson
+import chess
+import re
 
 from chessdotcom import *
 import webbrowser
@@ -123,7 +125,16 @@ def parse_games(game_info):
     else:
         unchecked_usernames.append(black[2])
     game_rating = (black[1] + white[1]) // 2
+    #moves = chess.pgn.read_game(game_info['pgn'])
     moves = game_info['pgn']
+    moves = moves[moves.index('1.'):]
+    moves = moves[:moves.rfind('}') + 1]
+    moves = re.sub("\{.*?\}","", moves)
+    # i = 1
+    # while "..." in moves:
+    #     removal_string = str(i) + "..."
+    #     moves.replace(removal_string, "")
+    # i = 1
     game_details = [uuid, game_rating, moves, white, black]
     if game_rating > 1000 and game_rating < 1399:
         parsed_games['1000-1399'].append(game_details)
