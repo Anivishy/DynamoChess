@@ -1,4 +1,5 @@
 import chess
+import chess.pgn
 import pygame
 import time
 from ui import UI
