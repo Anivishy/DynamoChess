@@ -21,6 +21,7 @@ def board_evaluator(game_ui, ai):
     #print(ai.get_ai_move(written_board, chess.BLACK))
     material = game_ui.piece_values()
     black_king, white_king = game_ui.king_safety()
+    #print(black_king, white_king)
     num_legal_moves = written_board.legal_moves.count()
     return material
        

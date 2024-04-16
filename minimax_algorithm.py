@@ -34,8 +34,9 @@ class ChessAI():
         #TODO
         material = game_ui.piece_values()
         
-        print(material, moves[0], moves)
-        #black_king, white_king = game_ui.king_safety()
+        
+        black_king, white_king = game_ui.king_safety()
+        print(material, moves[0], moves, black_king, white_king)
         num_legal_moves = board.legal_moves.count()
         game_ui.board = cur_board
         return material
