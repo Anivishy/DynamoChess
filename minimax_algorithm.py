@@ -31,6 +31,7 @@ class ChessAI():
             screen_move, promotion, castle_detection = self.translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
             chess_move = chess.Move.from_uci(move)
             game_ui.selected_piece_movement(second_coord, first_coord, promotion, castle_detection)
+        # after this code the UI board is updated. So evaluation can be done. 
         #TODO
         material = game_ui.piece_values()
         
