@@ -23,60 +23,8 @@ def board_evaluator(game_ui, ai):
     black_king, white_king = game_ui.king_safety()
     num_legal_moves = written_board.legal_moves.count()
     return material
-    
-
-def evaluate_pos(uci, game_ui, depth, best_eval, best_move, original_move): # this will probably be scrapped
-    if depth == 0:
-        return game_ui.piece_values(), original_move
-    #new_board = deepcopy(board) # this is not a good use of space but for now its a quick solution
-    #game_ui.board = new_board
-    first_coord, second_coord = translator.uci_to_coordinates(uci)
-    screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
-    game_ui.selected_piece_movement(second_coord, first_coord, promotion, castle_detection)
-    written_board.push(chess.Move.from_uci(uci))
-    for move in written_board.legal_moves:
-        uci = move.uci()
-        copy = deepcopy(game_ui.board)
-        move_eval, original_move = evaluate_pos(move.uci(), game_ui, depth - 1, best_eval, best_move, original_move)
-        #print(move_eval, best_eval)
-        if move_eval > best_eval:
-            best_eval = move_eval
-            best_move = original_move
-        game_ui.board = copy
-    written_board.pop()
-    #value = game_ui.piece_values()
-    #print(value)
-    #game_ui.board = board
-    return best_eval, best_move
-
-def automated_move(turn, moves, game_ui):
-    if turn < len(moves):
-        move = moves[turn]
-        #uci = translator.pgn_to_uci(move, written_board)
-        uci = None
-        ind = random.randint(0, (written_board.legal_moves.count() - 1))
-        best_eval = -math.inf
-        best_move = None
-        copy = deepcopy(game_ui.board)
-        for move in written_board.legal_moves:
-            uci = move.uci()
-            cur_eval, cur_move = evaluate_pos(move.uci(), game_ui, 2, best_eval, best_move, uci)
-            if cur_eval > best_eval:
-                best_eval = cur_eval
-                best_move = cur_move
-            game_ui.board = deepcopy(copy)
-            '''if ind > 0:
-                pass
-            else:
-                uci = move.uci()
-                break
-            ind -= 1'''
-    return best_move
-
-        
-def play_best_move(turn, moves, game_ui, ai):
-    #print(written_board.legal_moves[ind])
-    #chess_move = chess.Move.from_uci(uci)
+       
+def play_best_move(game_ui, ai):
     best_move = ai.get_ai_move(written_board, chess.BLACK, game_ui)
     first_coord, second_coord = translator.uci_to_coordinates(best_move)
     screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
@@ -129,7 +77,7 @@ def game_loop():
 
         if ai_move:
             #board_evaluator(game_ui, ai)
-            play_best_move(turn, moves, game_ui, ai)
+            play_best_move(game_ui, ai)
             print("_________________________________")
             ai_move = False
 
