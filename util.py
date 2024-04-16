@@ -36,6 +36,14 @@ def uci_to_onehot_tensor(move):
         tensor[piece_to_index[move[4]] + 32] = 1.0
     return tensor
 
+def uci_to_5d_tensor(move):
+    tensor = torch.zeros(8*4+6, 8, 8, dtype=torch.float32)
+    tensor[ord(move[0])-97, int(move[1]), int(move[2])] = 1.0
+    tensor[ord(move[2])-97 + 16, int(move[3]), int(move[2])] = 1.0
+    if len(move) == 5:
+        tensor[piece_to_index[move[4]] + 32, int(move[1]), int(move[2])] = 1.0
+    return tensor
+
 def onehot_tensor_to_uci(tensor):
     move = ""
     move += chr(torch.argmax(tensor[:8]).item() + 97)
