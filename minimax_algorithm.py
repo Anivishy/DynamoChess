@@ -41,7 +41,7 @@ class ChessAI():
         return material
     def minimax_recursive(self,curBoard,curTurn,curDepth, game_ui):
         if curDepth == self.max_depth:
-            return (self.get_eval_bar(curBoard, game_ui),curBoard)
+            return (self.get_eval_bar(curBoard, game_ui),curBoard) # TODO: Switch this to evluating all captures
 
         if curTurn == chess.WHITE:
             highestEval = (-100000000000,self.empty_board)

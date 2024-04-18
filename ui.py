@@ -1,5 +1,6 @@
 import pygame
 from math import *
+import chess
 BROWN = (100, 75, 50)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
@@ -134,3 +135,20 @@ class UI:
         black_king_score = black_king_adjusted[0]**2 + black_king_adjusted[1]**2
         white_king_score = white_king_adjusted[0]**2 + white_king_adjusted[1]**2
         return black_king_score, white_king_score
+    
+    def legal_move_manipulation(self, board: chess.Board, uci_translator):
+        coordinate_legal_moves = []
+        capture_legal_moves = []
+        uci_legal_moves = []
+        for move in board.legal_moves:
+            uci_legal_moves.append((str(move)[:2], str(move)[2:]))
+            coord_move = uci_translator(str(move))
+            coordinate_legal_moves.append(coord_move) # these are flipped
+            end_square = coord_move[1]
+            if board.piece_at(chess.parse_square(str(move)[2:])):
+                capture_legal_moves.append(coord_move)
+        return coordinate_legal_moves, capture_legal_moves, uci_legal_moves
+    
+    
+    
+        
