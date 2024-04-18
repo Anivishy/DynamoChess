@@ -25,6 +25,7 @@ def board_evaluator(game_ui, ai):
     return material
        
 def play_best_move(game_ui, ai):
+    
     best_move = ai.get_ai_move(written_board, chess.BLACK, game_ui)
     first_coord, second_coord = translator.uci_to_coordinates(best_move)
     screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
@@ -32,6 +33,9 @@ def play_best_move(game_ui, ai):
     if chess_move in written_board.legal_moves:
         game_ui.selected_piece_movement(second_coord, first_coord, promotion, castle_detection)
         written_board.push(chess_move)
+    print(game_ui.legal_move_manipulation(written_board, translator.uci_to_coordinates))
+    print(written_board.piece_at(chess.parse_square('a3')))
+    print(chess.square_name(chess.E4))
     time.sleep(0.75)
 
 def make_screen_move(screen_move, game_ui, new_pos, pgn_moves, selected_piece, promotion, castle_detection, turn, ai_move):
