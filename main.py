@@ -19,13 +19,6 @@ all_moves = 'd4 b6 Nc3 Bb7 Bf4 Nf6 e3 e6 Nf3 Bb4 Bd3 Bxc3+ bxc3 d6 O-O Nbd7 Re1 
 translator = Translator(all_moves)
 heuristic = Heuristics()
 
-
-def board_evaluator(game_ui, ai):
-    #print(ai.get_ai_move(written_board, chess.BLACK))
-    material = game_ui.piece_values()
-    black_king, white_king = game_ui.king_safety()
-    num_legal_moves = written_board.legal_moves.count()
-    return material
        
 def play_best_move(game_ui, ai):
     

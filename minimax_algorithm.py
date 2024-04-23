@@ -10,28 +10,26 @@ class ChessAI():
         self.empty_board = chess.Board()
         self.translator = translator
         self.heuristic = heuristic
-        
 
-    def get_legal_moves(self,board:chess.Board)->chess.Board:
-        moves = board.legal_moves
-        allboards = []
-        for i in moves:
-            posBoard = deepcopy(board)
-            posBoard.push(i)
-            allboards.append(posBoard)
-        return allboards
-
-    def get_eval_bar(self,board):
+    def get_eval_bar(self,board, curTurn):
         #TODO
+        evaluation = 0
         material = self.heuristic.piece_values(board)
         num_legal_moves = board.legal_moves.count()
-        return material
+        if curTurn: # white
+            evaluation += num_legal_moves * 0.1
+        else:
+            evaluation += -num_legal_moves * 0.1
+        evaluation += material
+        #print(evaluation)
+        return evaluation
     def minimax_recursive(self,curBoard,curTurn,curDepth):
         if curDepth == self.max_depth:
-            return (self.get_eval_bar(curBoard),self.first_move(curBoard.move_stack)) # TODO: Switch this to evluating all captures
+            return (self.get_eval_bar(curBoard, curTurn),self.first_move(curBoard.move_stack, self.max_depth)) # TODO: Switch this to evluating all captures
 
         if curTurn == chess.WHITE:
-            highestEval = (-100000000000,None)
+            move_stack = curBoard.move_stack
+            highestEval = (-100000000000,self.first_move(curBoard.move_stack, curDepth))
             for i in curBoard.legal_moves:
                 curBoard.push(i)
                 minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1)
@@ -40,7 +38,8 @@ class ChessAI():
                 curBoard.pop()
             return highestEval
         else:
-            lowestEval = (100000000000,None)
+            move_stack = curBoard.move_stack
+            lowestEval = (100000000000,self.first_move(curBoard.move_stack, curDepth + 1))
             for i in curBoard.legal_moves:
                 curBoard.push(i)
                 minmaxVal = self.minimax_recursive(curBoard,not curTurn,curDepth+1)
@@ -50,9 +49,10 @@ class ChessAI():
             return lowestEval
         
     def get_ai_move(self,board,turn):
-        best_outcome = self.minimax_recursive(board,turn,0)[1]
-        return best_outcome
+        best_outcome = self.minimax_recursive(board,turn,0)
+        print(best_outcome[0])
+        return best_outcome[1]
     
-    def first_move(self, move_stack):
-        first_move = str(move_stack[(len(move_stack) - self.max_depth)])
+    def first_move(self, move_stack, depth):
+        first_move = str(move_stack[(len(move_stack) - depth)])
         return first_move
