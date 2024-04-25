@@ -1,4 +1,5 @@
 import chess
+from CentControlHeuristic import CenterControlClass
 
 
 piece_material = {
@@ -20,14 +21,18 @@ class Heuristics:
         coordinate_legal_moves = []
         capture_legal_moves = []
         uci_legal_moves = []
+        move_object_moves = []
         for move in board.legal_moves:
+            move_object_moves.append(move)
             uci_legal_moves.append((str(move)[:2], str(move)[2:]))
             coord_move = uci_translator(str(move))
             coordinate_legal_moves.append(coord_move) # these are flipped
             end_square = coord_move[1]
             if board.piece_at(chess.parse_square(str(move)[2:])):
                 capture_legal_moves.append(coord_move)
-        return coordinate_legal_moves, capture_legal_moves, uci_legal_moves
+
+            
+        return coordinate_legal_moves, capture_legal_moves, uci_legal_moves, move_object_moves
 
     def piece_values(self, board: chess.Board):
         material = 0
@@ -41,4 +46,8 @@ class Heuristics:
                     else:
                         material -= piece_material[piece.upper()]
         return material
+    
+    def get_center_control_value(self, board: chess. Board):
+        self.center_control = CenterControlClass()
+        return self.center_control.centerControl(board)
     
