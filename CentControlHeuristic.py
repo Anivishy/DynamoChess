@@ -7,11 +7,11 @@ class CenterControlClass:
     def __init__(self):
         pass
 
-    def centerControl (self, board: chess.Board):
+    def centerControl (self, board: chess.Board, move_object_moves):
         self.center_control = CenterControlClass()
-        move_object_moves = self.center_control.legal_move_manipulation(board) #check this
+        #move_object_moves = self.center_control.legal_move_manipulation(board) #check this
         center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"]
-        controlled = []
+        #controlled = []
         control_score = 0
         for move in move_object_moves:
             for center_position in center_moves:
@@ -20,10 +20,10 @@ class CenterControlClass:
                 to_square_index = to_square.start()
                 #print(move_uci[to_square_index + 1:])
                 if center_position in move_uci[to_square_index + 1:]:
-                    if center_position not in controlled:
+                    #if center_position not in controlled:
                         control_score += 1
-                        controlled.append(center_position)
-        print(controlled)
+                        #controlled.append(center_position) # do we need this TODO
+        #print(controlled)
         return control_score
 
             

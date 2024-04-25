@@ -47,7 +47,6 @@ class Heuristics:
                         material -= piece_material[piece.upper()]
         return material
     
-    def get_center_control_value(self, board: chess. Board):
-        self.center_control = CenterControlClass()
-        return self.center_control.centerControl(board)
+    def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
+        return center_control.centerControl(board, move_object_moves)
     
