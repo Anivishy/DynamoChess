@@ -2,6 +2,8 @@ import chess
 import pandas as pd
 from copy import deepcopy
 import math 
+from CentControlHeuristic import CenterControlClass
+from pgn_translator import Translator
 
 import random
 
@@ -17,6 +19,8 @@ class ChessAI():
         evaluation = 0
         material = self.heuristic.piece_values(board)
         num_legal_moves = board.legal_moves.count()
+        center_control_heuristic = self.heuristic.get_center_control_value(board)
+        print(center_control_heuristic)
         if curTurn: # white
             evaluation += num_legal_moves * 0.1
         else:
