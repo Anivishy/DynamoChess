@@ -17,13 +17,17 @@ piece_to_index = {
 }
 
 def board_to_list(board):
-    board_list = ""
+    board_list = []
     for i in range(64):
         piece = board.piece_at(i)
+        
         if piece is not None:
-            board_list += str(piece.piece_type + 6 * piece.color)
+            board_list.append(piece.piece_type + 6 * piece.color) 
         else:
-            board_list += str(0)
+            board_list.append(0)
+        
+
+
     return board_list
 
 def uci_to_onehot_tensor(move):
@@ -56,9 +60,12 @@ def onehot_tensor_to_uci(tensor):
 
 
 def one_hot_board(list_board):
+    
+    #print(list_board)
+
     one_hot = torch.zeros(13, 8, 8, dtype=torch.float32)
     for i in range(64):
-        piece = int(list_board[i])
+        piece = list_board[i]
         
         one_hot[piece, i // 8, i % 8] = 1.0
     return one_hot
@@ -67,7 +74,7 @@ def one_hot_to_board(one_hot):
     board = chess.Board()
     for i in range(64):
         for j in range(12):
-            if one_hot[j, i // 8, i % 8] == 1:
+            if one_hot[j, i // 8, i % 8] == 1.0:
                 piece = chess.Piece(j % 6 + 1, j // 6)
                 board.set_piece_at(i, piece)
     return board
