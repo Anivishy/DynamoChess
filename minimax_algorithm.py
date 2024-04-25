@@ -1,6 +1,8 @@
 import chess
 import pandas as pd
 from copy import deepcopy
+from CentControlHeuristic import CenterControlClass
+from pgn_translator import Translator
 
 import random
 
@@ -25,6 +27,8 @@ class ChessAI():
         #TODO
         material = self.heuristic.piece_values(board)
         num_legal_moves = board.legal_moves.count()
+        center_control_heuristic = self.heuristic.get_center_control_value(board)
+        print(center_control_heuristic)
         return material
     def minimax_recursive(self,curBoard,curTurn,curDepth):
         if curDepth == self.max_depth:
