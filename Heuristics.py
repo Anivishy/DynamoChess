@@ -41,4 +41,5 @@ class Heuristics:
                     else:
                         material -= piece_material[piece.upper()]
         return material
+  
     

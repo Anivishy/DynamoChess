@@ -12,7 +12,7 @@ from Movemaker import Movemaker
 from minimax_algorithm import ChessAI
 pygame.init()
 written_board = chess.Board()
-size = 800
+size = 600
 square_size = size / 8
 movemaker = Movemaker()
 all_moves = 'd4 b6 Nc3 Bb7 Bf4 Nf6 e3 e6 Nf3 Bb4 Bd3 Bxc3+ bxc3 d6 O-O Nbd7 Re1 Qe7 e4 e5 Bg5 h6 Bxf6 Nxf6 c4 O-O d5 Nd7 g3 Nc5 Nh4 Bc8 Qf3 g5 Nf5 Qf6 g4 Bxf5 Qxf5 Qxf5 gxf5 Kg7 a4 Kf6 a5 bxa5 Rxa5 a6 Rea1 Rfb8 R5a2 g4 Kg2 Kg5 Kg3 h5 h4+ gxh3 Rh1 h4+ Kf3 a5 Rxh3 a4 Bf1 a3 Kg2 Nxe4 Raxa3 Rxa3 Rxa3 Nc5 Ra7 Rb7 Ra8 Rb2 Rh8 Rxc2 Rh7 e4 Kg1 f6 Bh3 Rxc4 Rg7+ Kf4 Rg4+ Ke5 Rxh4 Kxd5 Rh6 Ke5 Rh7 c6 Re7+ Kf4 Rf7 Rc1+ Kg2 Rc2 Kg1 Nd3 Rxf6 Nxf2 Bg2 d5 Rf8 Kg3 Rg8+ Ng4 f6 Rxg2+ Kf1 Rf2+ Ke1 Rxf6 Kd2 Kf3 Kc3 e3 Kb4 e2 Re8 Rf4+ Kc5 Re4 Rf8+ Ke3 Rg8 Ne5 Kb6 Nd3 Kc7 e1=Q Rg3+ Kd4 Rh3 Re7+ Kb6 Qb4+ Ka6 Qb5#'
@@ -47,7 +47,7 @@ def game_loop():
     pgn_moves = []
     turn = 0
     game_ui = UI(size)
-    ai = ChessAI(4, translator, heuristic)
+    ai = ChessAI(3, translator, heuristic)
     game_over = False
     selected_piece = None
     ai_move = False
