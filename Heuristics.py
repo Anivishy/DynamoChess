@@ -42,4 +42,8 @@ class Heuristics:
                         material -= piece_material[piece.upper()]
         return material
   
-    
+    def piece_activity(self, board: chess.Board):
+        pass
+        # this probably is dependent on the piece (knight in center, bishop in corners)
+        # what about pawns? 
+        # should we make table bases then TODO

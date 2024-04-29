@@ -47,7 +47,7 @@ def game_loop():
     pgn_moves = []
     turn = 0
     game_ui = UI(size)
-    ai = ChessAI(3, translator, heuristic)
+    ai = ChessAI(4, translator, heuristic)
     game_over = False
     selected_piece = None
     ai_move = False

@@ -11,6 +11,7 @@ class ChessAI():
         self.empty_board = chess.Board()
         self.translator = translator
         self.heuristic = heuristic
+        self.total_positions = 0
 
     def get_eval_bar(self,board, curTurn):
         #TODO
@@ -33,6 +34,7 @@ class ChessAI():
             highestEval = (-float(math.inf),self.first_move(curBoard.move_stack, curDepth))
             for i in curBoard.legal_moves:
                 curBoard.push(i)
+                self.total_positions += 1
                 minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta)
                 if minmaxVal[0]>highestEval[0]:
                     highestEval = minmaxVal
@@ -46,6 +48,7 @@ class ChessAI():
             lowestEval = (float(math.inf),self.first_move(curBoard.move_stack, curDepth + 1))
             for i in curBoard.legal_moves:
                 curBoard.push(i)
+                self.total_positions += 1
                 minmaxVal = self.minimax_recursive(curBoard,not curTurn,curDepth+1, alpha, beta)
                 if minmaxVal[0]<lowestEval[0]:
                     lowestEval = minmaxVal
@@ -56,7 +59,9 @@ class ChessAI():
             return lowestEval
         
     def get_ai_move(self,board,turn):
+        self.total_positions = 0
         best_outcome = self.minimax_recursive(board,turn,0, float(-math.inf), float(math.inf))
+        print(self.total_positions)
         print(best_outcome[0])
         return best_outcome[1]
     
