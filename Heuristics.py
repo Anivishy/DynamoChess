@@ -28,8 +28,8 @@ class Heuristics:
             coord_move = uci_translator(str(move))
             coordinate_legal_moves.append(coord_move) # these are flipped
             end_square = coord_move[1]
-            if board.piece_at(chess.parse_square(str(move)[2:])):
-                capture_legal_moves.append(coord_move)
+            if board.piece_at(chess.parse_square(str(move)[2:4])):
+                capture_legal_moves.append(move)
 
             
         return coordinate_legal_moves, capture_legal_moves, uci_legal_moves, move_object_moves
