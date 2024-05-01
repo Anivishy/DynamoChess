@@ -21,15 +21,15 @@ class ChessAI():
         evaluation = 0
         material = self.heuristic.piece_values(board)
         num_legal_moves = board.legal_moves.count()
-        #center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
+        center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
         #print(center_control_heuristic)
-        if curTurn: # white
+        #if curTurn: # white
             #print("White")
-            evaluation += num_legal_moves * 0.02
+            #evaluation += num_legal_moves * 0.02
             #evaluation += center_control_heuristic * 0.01
-        else:
+        #else:
             #print("Black")
-            evaluation += -num_legal_moves * 0.02
+            #evaluation += -num_legal_moves * 0.02
             #evaluation += center_control_heuristic * -0.01
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
@@ -39,7 +39,7 @@ class ChessAI():
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
         
         #print(curBoard.move_stack, depth)
-        if len(capture_legal_moves) == 0:
+        if len(capture_legal_moves) == 0 or depth >= self.max_depth + 3:
             return (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth))
         
         #print(capture_legal_moves, curBoard.move_stack)
