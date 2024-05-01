@@ -40,7 +40,7 @@ class CenterControlClass:
                             control_score += 1
                             #controlled.append(center_position) # do we need this TODO
         #print(controlled)
-        print(control_score)
+        #print(control_score)
         return control_score
 
             
