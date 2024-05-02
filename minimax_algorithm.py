@@ -4,8 +4,24 @@ from copy import deepcopy
 import math 
 from CentControlHeuristic import CenterControlClass
 from pgn_translator import Translator
-
+from threading import Thread
+import threading
 import random
+
+class ThreadWithReturnValue(Thread):
+    
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args,
+                                                **self._kwargs)
+    def join(self, *args):
+        Thread.join(self, *args)
+        return self._return
 
 class ChessAI():
     def __init__(self,depth, translator, heuristic) -> None:
@@ -14,6 +30,8 @@ class ChessAI():
         self.translator = translator
         self.heuristic = heuristic
         self.center_contol = CenterControlClass()
+        self.white_minmax = []
+        self.black_minmax = []
 
     def get_eval_bar(self,board, curTurn, move_object_moves):
         #TODO
@@ -43,7 +61,13 @@ class ChessAI():
             highestEval = (-float(math.inf),self.first_move(curBoard.move_stack, curDepth))
             for i in curBoard.legal_moves:
                 curBoard.push(i)
-                minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta, move_object_moves)
+                #################
+                white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
+                                                            args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
+                white_minmax_thread.start()
+                self.white_minmax.append(white_minmax_thread)
+                minmaxVal = white_minmax_thread.join()
+                #minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta, move_object_moves)
                 if minmaxVal[0]>highestEval[0]:
                     highestEval = minmaxVal
                 curBoard.pop()
@@ -56,7 +80,13 @@ class ChessAI():
             lowestEval = (float(math.inf),self.first_move(curBoard.move_stack, curDepth + 1))
             for i in curBoard.legal_moves:
                 curBoard.push(i)
-                minmaxVal = self.minimax_recursive(curBoard,not curTurn,curDepth+1, alpha, beta, move_object_moves)
+                ################
+                black_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
+                                                            args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
+                black_minmax_thread.start()
+                self.black_minmax.append(black_minmax_thread)
+                minmaxVal = black_minmax_thread.join()
+                #minmaxVal = self.minimax_recursive(curBoard,not curTurn,curDepth+1, alpha, beta, move_object_moves)
                 if minmaxVal[0]<lowestEval[0]:
                     lowestEval = minmaxVal
                 curBoard.pop()
