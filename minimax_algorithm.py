@@ -38,15 +38,16 @@ class ChessAI():
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
+        
         #print(len(capture_legal_moves))
         #print(curBoard.move_stack, depth)
-        if len(capture_legal_moves) == 0: # or depth >= self.max_depth + 2:
+        if len(capture_legal_moves) == 0:# or depth >= self.max_depth + 2:
             return (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth))
         
         #print(capture_legal_moves, curBoard.move_stack)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
-            highestEval = ((-float(math.inf), None), self.first_move(move_stack, depth))
+            highestEval = (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth), self.first_move(move_stack, depth))
             for i in capture_legal_moves:
                 curBoard.push(i)
                 captures_only_minmax_val = self.captures_only_search(curBoard, not curTurn, depth+1, alpha, beta, move_object_moves)
@@ -60,7 +61,7 @@ class ChessAI():
             return highestEval
         else:
             move_stack = curBoard.move_stack
-            lowestEval = ((float(math.inf), None),self.first_move(curBoard.move_stack, depth + 1))
+            lowestEval = (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth),self.first_move(curBoard.move_stack, depth + 1))
             for i in capture_legal_moves:
                 curBoard.push(i)
                 captures_only_minmax_val = self.captures_only_search(curBoard,not curTurn,depth+1, alpha, beta, move_object_moves)
@@ -75,8 +76,8 @@ class ChessAI():
 
     def minimax_recursive(self,curBoard,curTurn,curDepth, alpha, beta, move_object_moves):
         if curDepth == self.max_depth:
-            return (self.captures_only_search(curBoard, curTurn, curDepth, alpha, beta, move_object_moves))
-            #return (self.get_eval_bar(curBoard, curTurn, move_object_moves),self.first_move(curBoard.move_stack, self.max_depth)) # TODO: Switch this to evluating all captures
+            #return (self.captures_only_search(curBoard, curTurn, curDepth, alpha, beta, move_object_moves))
+            return (self.get_eval_bar(curBoard, curTurn, move_object_moves),self.first_move(curBoard.move_stack, self.max_depth)) # TODO: Switch this to evluating all captures
         move_object_moves = self.center_contol.legal_move_manipulation(curBoard)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
