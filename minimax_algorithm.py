@@ -26,10 +26,12 @@ class ChessAI():
         #print(center_control_heuristic)
         if curTurn: # white
             #print("White")
+            # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
             evaluation += num_legal_moves * 0.01
             evaluation += center_control_heuristic * 0.03
         else:
             #print("Black")
+            # TODO: Need to look for checkmate here.
             evaluation += -num_legal_moves * 0.01
             evaluation += -center_control_heuristic * 0.03
         evaluation += material * 2
@@ -119,6 +121,7 @@ class ChessAI():
         return best_outcome[1]
     
     def first_move(self, move_stack, depth):
-        
+        if len(move_stack) == 0:
+            return None
         first_move = str(move_stack[int(len(move_stack) - depth)])
         return first_move
