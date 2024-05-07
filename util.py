@@ -69,7 +69,11 @@ def one_hot_board(list_board):
         
         one_hot[piece, i // 8, i % 8] = 1.0
 
+<<<<<<< HEAD
     one_hot[13] = 1.0
+=======
+    # one_hot[13] = 1.0
+>>>>>>> 2b0654b (testing supervised learning method before trying to optimize/parallelize mcts rl method)
 
     return one_hot
 
