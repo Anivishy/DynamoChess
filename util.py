@@ -68,6 +68,9 @@ def one_hot_board(list_board):
         piece = list_board[i]
         
         one_hot[piece, i // 8, i % 8] = 1.0
+
+    # one_hot[13] = 1.0
+
     return one_hot
 
 def one_hot_to_board(one_hot):
