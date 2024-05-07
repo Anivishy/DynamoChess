@@ -22,21 +22,21 @@ class ChessAI():
         evaluation = 0
         material = self.heuristic.piece_values(board)
         num_legal_moves = board.legal_moves.count()
-        center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
+        #center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
         #print(center_control_heuristic)
         if curTurn: # white
             #print("White")
             # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
             evaluation += num_legal_moves * 0.01
-            evaluation += center_control_heuristic * 0.03
+            #evaluation += center_control_heuristic * 0.03
         else:
             #print("Black")
             # TODO: Need to look for checkmate here.
             evaluation += -num_legal_moves * 0.01
-            evaluation += -center_control_heuristic * 0.03
+            #evaluation += -center_control_heuristic * 0.03
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, num_legal_moves * 0.01, center_control_heuristic * 0.03, center_control_heuristic, curTurn, deepcopy(board))
+        return evaluation, (material * 2, num_legal_moves * 0.01, '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
@@ -78,8 +78,8 @@ class ChessAI():
 
     def minimax_recursive(self,curBoard,curTurn,curDepth, alpha, beta, move_object_moves):
         if curDepth == self.max_depth:
-            #return (self.captures_only_search(curBoard, curTurn, curDepth, alpha, beta, move_object_moves))
-            return (self.get_eval_bar(curBoard, curTurn, move_object_moves),self.first_move(curBoard.move_stack, self.max_depth)) # TODO: Switch this to evluating all captures
+            return (self.captures_only_search(curBoard, curTurn, curDepth, alpha, beta, move_object_moves))
+            #return (self.get_eval_bar(curBoard, curTurn, move_object_moves),self.first_move(curBoard.move_stack, self.max_depth)) # TODO: Switch this to evluating all captures
         move_object_moves = self.center_contol.legal_move_manipulation(curBoard)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
