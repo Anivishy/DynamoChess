@@ -64,7 +64,7 @@ class CenterControlClass:
         #score = asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
         #return score
         final_score = asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
-        print(final_score)
+        #print(final_score)
         return final_score
         # for move in move_object_moves:
         #     for center_position in center_moves:

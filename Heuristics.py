@@ -8,6 +8,7 @@ piece_material = {
     'B': 3,
     'R': 5,
     'Q': 9,
+    'K': 50
 }
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -49,4 +50,17 @@ class Heuristics:
     
     def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
         return center_control.centerControl(board, move_object_moves)
+    
+    def move_ordering(self, moves, board: chess.Board):
+        moves_scores_list = []
+        for move in moves:
+            move_score = 0
+            uci_move = str(move)
+            from_square = str(board.piece_at(chess.parse_square(uci_move[:2]))).upper()
+            to_square = str(board.piece_at(chess.parse_square(uci_move[2:]))).upper()
+            if to_square != 'NONE':
+                move_score += piece_material[to_square] - piece_material[from_square]
+            moves_scores_list.append((move, move_score))
+        return moves_scores_list, len(moves_scores_list)
+            
     
