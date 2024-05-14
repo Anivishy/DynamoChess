@@ -7,7 +7,8 @@ import aiohttp
 class CenterControlClass:
 
     def __init__(self):
-        self.control_score = 0
+        # self.control_score = 0
+        pass
 
     async def post_async(self, move, board):
         center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"]
@@ -27,15 +28,15 @@ class CenterControlClass:
             is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
             if is_pawn:
                 if (from_square_str[0] == "d" or from_square_str[0] == "e") and center_position in move_uci[to_square_index + 1:]:
-                    self.control_score += 2
+                    move_score += 2
                 elif (from_square_str[0] == "c" or from_square_str[0] == "f") and center_position in move_uci[to_square_index + 1:]:
-                    self.control_score += 1
+                    move_score += 1
             else:
                 if center_position in move_uci[to_square_index + 1:]:
                     #if center_position not in controlled:
-                        self.control_score += 1
+                        move_score += 1
                         #controlled.append(center_position) # do we need this TODO
-        return #move_score
+        return move_score
 
     async def calc_score(self, moves: list, board, ccc):
         control_score = 0
@@ -45,8 +46,8 @@ class CenterControlClass:
             for coro in asyncio.as_completed(tasks):
                 #results = await asyncio.gather(*tasks)
                 result = await coro
-            #     control_score += result 
-            # return control_score
+                control_score += result 
+            return control_score
 
     def centerControl (self, board: chess.Board, move_object_moves):
         self.center_control = CenterControlClass()
@@ -62,8 +63,9 @@ class CenterControlClass:
         #print("__________________________________________")
         #score = asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
         #return score
-        asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
-        return self.control_score
+        final_score = asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
+        print(final_score)
+        return final_score
         # for move in move_object_moves:
         #     for center_position in center_moves:
         #         move_uci = move.uci()
