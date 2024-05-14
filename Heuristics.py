@@ -1,5 +1,7 @@
 import chess
 from CentControlHeuristic import CenterControlClass
+import asyncio
+import aiohttp
 
 
 piece_material = {
@@ -33,19 +35,56 @@ class Heuristics:
 
             
         return coordinate_legal_moves, capture_legal_moves, uci_legal_moves, move_object_moves
+    
+    async def post_async(self, letter, number, board):
+        material = 0
+        square = letter + number
+        piece = str(board.piece_at(chess.parse_square(square)))
+        if piece.lower() != 'k' and piece != 'None':
+            if piece.isupper():
+                material += piece_material[piece]
+            else:
+                material -= piece_material[piece.upper()]
+        return material
+    
+    async def calc_piece_score_final(self, letter, board, heuristic):
+        async with aiohttp.ClientSession() as session:
+            combined_material_num = 0
+            tasks = [heuristic.post_async(letter, number, board) for number in numbers]
+            #print(tasks)
+            for coro in asyncio.as_completed(tasks):
+                #results = await asyncio.gather(*tasks)
+                result = await coro
+                combined_material_num += result
+            return combined_material_num
+
+    
+    async def calc_piece_score_intermediate(self, board, heuristic):
+        async with aiohttp.ClientSession() as session:
+            combined_material_letter = 0
+            tasks = [heuristic.calc_piece_score_final(letter, board, heuristic) for letter in letters]
+            #print(tasks)
+            for coro in asyncio.as_completed(tasks):
+                #results = await asyncio.gather(*tasks)
+                result = await coro
+                combined_material_letter += result
+            return combined_material_letter
+
+            
 
     def piece_values(self, board: chess.Board):
-        material = 0
-        for letter in letters:
-            for number in numbers:
-                square = letter + number
-                piece = str(board.piece_at(chess.parse_square(square)))
-                if piece.lower() != 'k' and piece != 'None':
-                    if piece.isupper():
-                        material += piece_material[piece]
-                    else:
-                        material -= piece_material[piece.upper()]
-        return material
+        heuristic = Heuristics()
+        final_material = asyncio.run(heuristic.calc_piece_score_intermediate(board, heuristic))
+        # for letter in letters:
+        #     for number in numbers:
+        #         square = letter + number
+        #         piece = str(board.piece_at(chess.parse_square(square)))
+        #         if piece.lower() != 'k' and piece != 'None':
+        #             if piece.isupper():
+        #                 material += piece_material[piece]
+        #             else:
+        #                 material -= piece_material[piece.upper()]
+        return final_material
     
     def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
         return center_control.centerControl(board, move_object_moves)

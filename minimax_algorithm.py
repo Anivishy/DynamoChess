@@ -38,23 +38,29 @@ class ChessAI():
     def get_eval_bar(self,board, curTurn, move_object_moves):
         #TODO
         evaluation = 0
+        print("STARTED material")
         material = self.heuristic.piece_values(board)
+        print("Done with material")
         num_legal_moves = board.legal_moves.count()
-        #center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
+        print("Done with num legal moves")
+        center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
+        print("Done with center")
         #print(center_control_heuristic)
         if curTurn: # white
             #print("White")
             # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
             evaluation += num_legal_moves * 0.01
-            #evaluation += center_control_heuristic * 0.03
+            evaluation += center_control_heuristic * 2
+            pass
         else:
             #print("Black")
             # TODO: Need to look for checkmate here.
             evaluation += -num_legal_moves * 0.01
-            #evaluation += -center_control_heuristic * 0.03
+            evaluation += -center_control_heuristic * 2
+            pass
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, num_legal_moves * 0.01, '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
+        return evaluation, ('material * 2', 'num_legal_moves * 0.01', '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
