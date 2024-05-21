@@ -63,13 +63,13 @@ def one_hot_board(list_board):
     
     #print(list_board)
 
-    one_hot = torch.zeros(13, 8, 8, dtype=torch.float32)
+    one_hot = torch.zeros(14, 8, 8, dtype=torch.float32)
     for i in range(64):
         piece = list_board[i]
         
         one_hot[piece, i // 8, i % 8] = 1.0
 
-    # one_hot[13] = 1.0
+    one_hot[13] = 1.0
 
     return one_hot
 

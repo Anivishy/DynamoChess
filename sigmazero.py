@@ -20,14 +20,15 @@ class SimpleValueNetwork(nn.Module):
 
         self.fc = nn.Sequential( 
             nn.Flatten(),
-            nn.Linear(13*8*8, 4096),
+            nn.Linear(14*8*8, 2048),
             nn.LeakyReLU(),
-            nn.Linear(4096, 4096),
+            nn.Linear(2048, 2048),
             nn.LeakyReLU(),
-            nn.Linear(4096, 2048),
+            nn.Linear(2048, 2048),
             nn.LeakyReLU(),
-            nn.Linear(2048, 1),
-            nn.Tanh()
+            nn.Linear(2048, 2048),
+            nn.LeakyReLU(),
+            nn.Linear(2048, 1), 
         )
 
     def forward(self, x):
@@ -66,7 +67,7 @@ class ValueNetwork(nn.Module):
     def __init__(self):
         super(ValueNetwork, self).__init__()
 
-        self.conv1 = nn.Conv2d(13, 254, kernel_size=3, padding=1)
+        self.conv1 = nn.Conv2d(14, 254, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm2d(254)
         self.res1 = ResBlock(254, 254)
         self.res2 = ResBlock(254, 254)
