@@ -86,6 +86,7 @@ class Heuristics:
     def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
         return center_control.centerControl(board, move_object_moves)
     
+<<<<<<< HEAD
 
     def move_ordering(self, moves, board: chess.Board):
         moves_scores_list = []
@@ -100,6 +101,8 @@ class Heuristics:
         return moves_scores_list, len(moves_scores_list)
             
     
+=======
+>>>>>>> c73c7fc (king safety heuristic V1 complete)
     def get_king_safety_value(self, board: chess. Board):
         self._king_safety = KingSafetyHeursitic()
         return self._king_safety.getKingSafety(board)
