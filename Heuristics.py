@@ -1,6 +1,6 @@
 import chess
 from CentControlHeuristic import CenterControlClass
-
+from KingSafetyHeuristic import KingSafetyHeursitic
 
 piece_material = {
     'P': 1,
@@ -50,3 +50,6 @@ class Heuristics:
     def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
         return center_control.centerControl(board, move_object_moves)
     
+    def get_king_safety_value(self, board: chess. Board):
+        self._king_safety = KingSafetyHeursitic()
+        return self._king_safety.getKingSafety(board)

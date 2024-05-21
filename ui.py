@@ -17,7 +17,7 @@ BISHOP = 'PieceImages/black_bishop.png'
 QUEEN = 'PieceImages/black_queen.png'
 KING = 'PieceImages/black_king.png'
 PAWN = 'PieceImages/black_pawn.png'
-
+global piece_value
 piece_value = {
     'r': 5, 
     'n': 3, 

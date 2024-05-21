@@ -3,6 +3,7 @@ import pandas as pd
 from copy import deepcopy
 import math 
 from CentControlHeuristic import CenterControlClass
+import Heuristics
 from pgn_translator import Translator
 from threading import Thread
 import threading
@@ -52,6 +53,7 @@ class ChessAI():
             # TODO: Need to look for checkmate here.
             #evaluation += -num_legal_moves * 0.01
             evaluation += -center_control_heuristic * 0.09
+        evaluation += self.heuristic.get_king_safety_value(board)
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
         return evaluation, (material * 2, 'num_legal_moves * 0.01', center_control_heuristic * 0.03, center_control_heuristic, curTurn, deepcopy(board))
