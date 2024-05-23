@@ -35,6 +35,7 @@ class ChessAI():
         self.black_minmax = []
         self.positions = 0
         self.positions_reg_search = 0
+        self.pruning = 0
 
 
     def sort_partition(self, moves_scores_list, low, high):
@@ -67,31 +68,32 @@ class ChessAI():
             #print("White")
             # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
             evaluation += num_legal_moves * 0.01
-            evaluation += center_control_heuristic * 0.09
+            evaluation += center_control_heuristic * 0.01
         else:
             
             #print("Black")
             # TODO: Need to look for checkmate here.
             evaluation += -num_legal_moves * 0.01
-            evaluation += -center_control_heuristic * 0.09
+            evaluation += -center_control_heuristic * 0.01
         evaluation += self.heuristic.get_king_safety_value(board)
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, num_legal_moves * 0.01, center_control_heuristic * 0.03, center_control_heuristic, curTurn, deepcopy(board))
+        return evaluation, (material * 2, num_legal_moves * 0.01, center_control_heuristic * 0.01, center_control_heuristic, curTurn, deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
         
         #print(len(capture_legal_moves))
         #print(curBoard.move_stack, depth)
-        if len(capture_legal_moves) == 0:# or depth >= self.max_depth + 2:
+        if len(capture_legal_moves) == 0 or depth >= self.max_depth + 2:
             return (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth))
-        moves_list = self.quick_sort(self.heuristic.move_ordering(capture_legal_moves, curBoard))
+        moves_scores_list, moves_length = self.heuristic.move_ordering(capture_legal_moves, curBoard)
+        self.quick_sort(moves_scores_list, 0, moves_length - 1)
         #print(capture_legal_moves, curBoard.move_stack)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
             highestEval = (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth), self.first_move(move_stack, depth))
-            for i in moves_list:
+            for i in moves_scores_list:
                 curBoard.push(i)
                 captures_only_minmax_val = self.captures_only_search(curBoard, not curTurn, depth+1, alpha, beta, move_object_moves)
                 self.positions += 1
@@ -100,12 +102,13 @@ class ChessAI():
                 curBoard.pop()
                 alpha = max(alpha, highestEval[0][0])
                 if beta <= alpha:
+                    self.pruning += 1
                     break
             return highestEval
         else:
             move_stack = curBoard.move_stack
             lowestEval = (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth),self.first_move(curBoard.move_stack, depth + 1))
-            for i in moves_list:
+            for i in moves_scores_list:
                 curBoard.push(i)
                 captures_only_minmax_val = self.captures_only_search(curBoard,not curTurn,depth+1, alpha, beta, move_object_moves)
                 self.positions += 1
@@ -114,6 +117,7 @@ class ChessAI():
                 curBoard.pop()
                 beta = min(beta, lowestEval[0][0])
                 if beta <= alpha:
+                    self.pruning += 1
                     break
             return lowestEval
 
@@ -132,18 +136,19 @@ class ChessAI():
             for i in moves_scores_list:
                 curBoard.push(i[0])
                 #################
-                white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
-                                                            args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
-                white_minmax_thread.start()
-                self.white_minmax.append(white_minmax_thread)
-                minmaxVal = white_minmax_thread.join()
+                #white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
+                                                            #args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
+                #white_minmax_thread.start()
+                #self.white_minmax.append(white_minmax_thread)
+                #minmaxVal = white_minmax_thread.join()
                 self.positions_reg_search += 1
-                #minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta, move_object_moves)
+                minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta, move_object_moves)
                 if minmaxVal[0][0]>highestEval[0][0]:
                     highestEval = minmaxVal
                 curBoard.pop()
                 alpha = max(alpha, highestEval[0][0])
                 if beta <= alpha:
+                    self.pruning += 1
                     break
             return highestEval
         else:
@@ -152,29 +157,33 @@ class ChessAI():
             for i in moves_scores_list:
                 curBoard.push(i[0])
                 ################
-                black_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
-                                                            args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
-                black_minmax_thread.start()
-                self.black_minmax.append(black_minmax_thread)
-                minmaxVal = black_minmax_thread.join()
+                #black_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
+                                                            #args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
+                #black_minmax_thread.start()
+                #self.black_minmax.append(black_minmax_thread)
+                #minmaxVal = black_minmax_thread.join()
                 self.positions_reg_search += 1
-                #minmaxVal = self.minimax_recursive(curBoard,not curTurn,curDepth+1, alpha, beta, move_object_moves)
+                minmaxVal = self.minimax_recursive(curBoard,not curTurn,curDepth+1, alpha, beta, move_object_moves)
+                #print(minmaxVal)
                 if minmaxVal[0][0]<lowestEval[0][0]:
                     lowestEval = minmaxVal
                 curBoard.pop()
                 beta = min(beta, lowestEval[0][0])
                 if beta <= alpha:
+                    self.pruning += 1
                     break
             return lowestEval
         
     def get_ai_move(self,board,turn):
         self.positions = 0
         self.positions_reg_search = 0
+        self.pruning = 0
         move_object_moves = self.center_contol.legal_move_manipulation(board)
         best_outcome = self.minimax_recursive(board,turn,0, float(-math.inf), float(math.inf), move_object_moves)
         print(best_outcome[0])
         print(best_outcome[0][1][-1])
         print(self.positions, self.positions_reg_search)
+        print(self.pruning)
         return best_outcome[1]
     
     def first_move(self, move_stack, depth):
