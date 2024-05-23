@@ -64,7 +64,6 @@ class Heuristics:
             moves_scores_list.append((move, move_score))
         return moves_scores_list, len(moves_scores_list)
             
-    
     def get_king_safety_value(self, board: chess. Board):
         self._king_safety = KingSafetyHeursitic()
         return self._king_safety.getKingSafety(board)
