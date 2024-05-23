@@ -92,7 +92,7 @@ class Heuristics:
             move_score = 0
             uci_move = str(move)
             from_square = str(board.piece_at(chess.parse_square(uci_move[:2]))).upper()
-            to_square = str(board.piece_at(chess.parse_square(uci_move[2:]))).upper()
+            to_square = str(board.piece_at(chess.parse_square(uci_move[2:4]))).upper()
             if to_square != 'NONE':
                 move_score += piece_material[to_square] - piece_material[from_square]
             moves_scores_list.append((move, move_score))
