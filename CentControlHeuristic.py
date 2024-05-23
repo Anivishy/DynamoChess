@@ -52,7 +52,6 @@ class CenterControlClass:
             return control_score
 
     def centerControl (self, board: chess.Board, move_object_moves):
-        self.center_control = CenterControlClass()
         #move_object_moves = self.center_control.legal_move_manipulation(board) #check this
         #rows = [""]
         # letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -110,7 +109,7 @@ class CenterControlClass:
             #     if move.to_square in center_moves:
             #          contro
                     
-    def legal_move_manipulation(self, board: chess.Board):
+    def legal_move_manipulation(self,board: chess.Board):
         coordinate_legal_moves = []
         capture_legal_moves = []
         uci_legal_moves = []

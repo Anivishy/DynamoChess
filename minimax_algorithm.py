@@ -3,6 +3,7 @@ import pandas as pd
 from copy import deepcopy
 import math 
 from CentControlHeuristic import CenterControlClass
+import Heuristics
 from pgn_translator import Translator
 from threading import Thread
 import threading
