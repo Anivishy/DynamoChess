@@ -54,12 +54,13 @@ class ChessAI():
             #rint(moves_scores_list)
             self.quick_sort(moves_scores_list, low, index - 1)
             self.quick_sort(moves_scores_list, index + 1, high)
+        #moves_scores_list = list(reversed(moves_scores_list))
 
 
     def get_eval_bar(self,board, curTurn, move_object_moves):
         #TODO
         evaluation = 0
-        material = self.heuristic.piece_values(board)
+        material = self.heuristic.piece_values(board, curTurn)
         num_legal_moves = board.legal_moves.count()
         #center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
         #print(center_control_heuristic)
@@ -84,10 +85,11 @@ class ChessAI():
         
         #print(len(capture_legal_moves))
         #print(curBoard.move_stack, depth)
-        if len(capture_legal_moves) == 0 or depth >= self.max_depth + 4:
+        if len(capture_legal_moves) == 0 or depth >= self.max_depth + 5:
             return (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth))
-        moves_scores_list, moves_length = self.heuristic.move_ordering(capture_legal_moves, curBoard)
+        moves_scores_list, moves_length = self.heuristic.move_ordering(capture_legal_moves, curBoard, curTurn)
         self.quick_sort(moves_scores_list, 0, moves_length - 1)
+        print(len(moves_scores_list), depth)
         #print(capture_legal_moves, curBoard.move_stack)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
@@ -127,8 +129,9 @@ class ChessAI():
         move_object_moves = self.center_contol.legal_move_manipulation(curBoard)
         test = [(None, 12), (None, 20), (None, 10), (None, 20), (None, 33), (None, 2), (None, 112), (None, 43), (None, 20)]
         #self.quick_sort(test, 0, len(test) - 1)
-        moves_scores_list, moves_length = self.heuristic.move_ordering(curBoard.legal_moves, curBoard)
+        moves_scores_list, moves_length = self.heuristic.move_ordering(curBoard.legal_moves, curBoard, curTurn)
         self.quick_sort(moves_scores_list, 0, moves_length - 1)
+        print(len(moves_scores_list), curDepth)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
             highestEval = ((-float(math.inf), None),self.first_move(curBoard.move_stack, curDepth))
