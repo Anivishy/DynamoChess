@@ -67,17 +67,17 @@ class ChessAI():
             
             #print("White")
             # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
-            evaluation += num_legal_moves * 0.01
+            evaluation += num_legal_moves * 0.1
             #evaluation += center_control_heuristic * 0.01
         else:
             
             #print("Black")
             # TODO: Need to look for checkmate here.
-            evaluation += -num_legal_moves * 0.01
+            evaluation += -num_legal_moves * 0.1
             #evaluation += -center_control_heuristic * 0.01
-        evaluation += material * 2
+        evaluation += material * 1.25
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, num_legal_moves * 0.01, '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
+        return evaluation, (material * 2, num_legal_moves * 0.1, '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
@@ -147,7 +147,7 @@ class ChessAI():
                 curBoard.pop()
                 alpha = max(alpha, highestEval[0][0])
                 if beta <= alpha:
-                    self.pruning += 1
+                    self.pruning += len(moves_scores_list) ** (curDepth)
                     break
             return highestEval
         else:
@@ -169,7 +169,7 @@ class ChessAI():
                 curBoard.pop()
                 beta = min(beta, lowestEval[0][0])
                 if beta <= alpha:
-                    self.pruning += 1
+                    self.pruning += len(moves_scores_list) ** (curDepth)
                     break
             return lowestEval
         
@@ -179,8 +179,9 @@ class ChessAI():
         self.pruning = 0
         move_object_moves = self.center_contol.legal_move_manipulation(board)
         best_outcome = self.minimax_recursive(board,turn,0, float(-math.inf), float(math.inf), move_object_moves)
-        print(best_outcome[0])
-        print(best_outcome[0][1][-1])
+        if best_outcome[0][1] != None:
+            print(best_outcome[0])
+            print(best_outcome[0][1][-1])
         print(self.positions, self.positions_reg_search)
         print(self.pruning_captures, self.pruning)
         return best_outcome[1]
