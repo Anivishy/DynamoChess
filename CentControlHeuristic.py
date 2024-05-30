@@ -104,12 +104,14 @@ class CenterControlClass:
         capture_legal_moves = []
         uci_legal_moves = []
         move_object_moves = [set(),set()]
+        init_turn = board.turn
         board.turn = chess.WHITE
         for move in board.legal_moves:
             move_object_moves[0].add(move)
         board.turn = not board.turn
         for move in board.legal_moves:
             move_object_moves[1].add(move)
+        board.turn = init_turn
             # uci_legal_moves.append((str(move)[:2], str(move)[2:]))
             # coord_move = uci_translator(str(move))
             # coordinate_legal_moves.append(coord_move) # these are flipped

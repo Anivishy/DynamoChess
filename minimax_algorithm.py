@@ -57,33 +57,32 @@ class ChessAI():
             self.quick_sort(moves_scores_list, index + 1, high)
 
 
-    def get_eval_bar(self,board, curTurn, move_object_moves):
+    def get_eval_bar(self,board:chess.Board, curTurn, move_object_moves):
         #TODO
         evaluation = 0
         material = self.heuristic.piece_values(board)
-        num_legal_moves = board.legal_moves.count()
-        #center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
-        #print(center_control_heuristic)
-        if curTurn: # white
-            
-            #print("White")
-            # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
-            evaluation += num_legal_moves * 0.01
-            # evaluation += center_control_heuristic * 0.01
-        else:
-            
-            #print("Black")
-            # TODO: Need to look for checkmate here.
-            evaluation += -num_legal_moves * 0.01
-            # evaluation += -center_control_heuristic * 0.01
-        
-        # evaluation += center_control_heuristic*0.01
-        # king_safety_measurment = self.heuristic.get_king_safety_value(board)
-        # evaluation += king_safety_measurment
+
+        init_turn = board.turn
+
+        board.turn = chess.WHITE
+        num_legal_moves_white = board.legal_moves.count()
+
+        board.turn = chess.BLACK
+        num_legal_moves_black = board.legal_moves.count()
+
+        board.turn = init_turn
+
+        evaluation += (num_legal_moves_white-num_legal_moves_black)* 0.1
+
+        center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
+        evaluation += center_control_heuristic*0.01
+
+        king_safety_measurment = self.heuristic.get_king_safety_value(board)
+        evaluation += king_safety_measurment
 
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, num_legal_moves * 0.01, curTurn,  deepcopy(board))
+        return evaluation, (material * 2, (num_legal_moves_white-num_legal_moves_black) * 0.01, curTurn,  deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
