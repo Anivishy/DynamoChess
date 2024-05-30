@@ -68,17 +68,22 @@ class ChessAI():
             
             #print("White")
             # TODO: Need to look for checkmate here. If the last move is mate we need detection. 
-            evaluation += num_legal_moves * 0.1
-            #evaluation += center_control_heuristic * 0.01
+            evaluation += num_legal_moves * 0.01
+            # evaluation += center_control_heuristic * 0.01
         else:
             
             #print("Black")
             # TODO: Need to look for checkmate here.
-            evaluation += -num_legal_moves * 0.1
-            #evaluation += -center_control_heuristic * 0.01
-        evaluation += material * 1.25
+            evaluation += -num_legal_moves * 0.01
+            # evaluation += -center_control_heuristic * 0.01
+        
+        # evaluation += center_control_heuristic*0.01
+        # king_safety_measurment = self.heuristic.get_king_safety_value(board)
+        # evaluation += king_safety_measurment
+
+        evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, num_legal_moves * 0.1, '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
+        return evaluation, (material * 2, num_legal_moves * 0.01, curTurn,  deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]

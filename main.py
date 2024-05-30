@@ -47,7 +47,7 @@ def game_loop():
     pgn_moves = []
     turn = 0
     game_ui = UI(size)
-    ai = ChessAI(2, translator, heuristic)
+    ai = ChessAI(3, translator, heuristic)
     game_over = False
     selected_piece = None
     ai_move = False # change this to true to make computer play as white
@@ -74,8 +74,10 @@ def game_loop():
 
         if ai_move:
             #board_evaluator(game_ui, ai)
+            start_time = time.time()
             play_best_move(game_ui, ai)
             print("_________________________________")
+            print(f"total execution time: {time.time()-start_time}")
             ai_move = False
 
 

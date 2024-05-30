@@ -102,4 +102,4 @@ class Heuristics:
     
     def get_king_safety_value(self, board: chess. Board):
         self._king_safety = KingSafetyHeursitic()
-        return self._king_safety.getKingSafety(board)
+        return self._king_safety.getKingSafety(board,chess.WHITE) + self._king_safety.getKingSafety(board,chess.BLACK)
