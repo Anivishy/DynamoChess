@@ -79,6 +79,13 @@ def game_loop():
             print("_________________________________")
             print(f"total execution time: {time.time()-start_time}")
             ai_move = False
+            '''
+            written_board.turn = chess.BLACK
+            print(written_board.legal_moves)
+            written_board.turn = chess.WHITE
+            
+            TODO: Infrastructure for accessing other color's movess
+            '''
 
 
 if __name__ == '__main__':

@@ -12,42 +12,91 @@ piece_material = {
 }
 
 table_base = {
-    'P': [
+    'p': [
         [0, 0, 0, 0, 0, 0, 0, 0], 
-        [5, 5, 5, 5, 5, 5, 5, 5], 
-        [8, 8, 8, 4, 4, 2, 8, 8], 
-        [9, 5, 10, 15, 15, 5, 9], 
-        [15, 15, 15, 15, 15, 15, 15, 15], 
-        [20, 20, 20, 20, 20, 20, 20, 20], 
-        [30, 30, 30, 30, 30, 30, 30, 30], 
-        [50, 50, 50, 50, 50, 50, 50, 50]
+        [1, 1, 1, 1, 1, 1, 1, 1], 
+        [1, 1, 1, 1, 1, 0, 1, 1], 
+        [3, 3, 4, 5, 5, 0, 3, 3], 
+        [5, 5, 6, 6, 6, 2, 5, 5], 
+        [7, 7, 8, 8, 8, 4, 7, 7], 
+        [8, 8, 9, 9, 9, 8, 8, 8], 
+        [10, 10, 10, 10, 10, 10, 10, 10]
     ], 
-    'N': [
+    'n': [
         [0, 8, 0, 0, 0, 0, 8, 0], 
         [1, 1, 1, 1, 1, 1, 1, 1], 
-        [4, 3, 10, 3, 3, 10, 3, 4], 
-        [5, 5, 8, 8, 8, 8, 5, 5], 
-        [], 
-        [], 
-        [], 
-        []
+        [4, 3, 5, 3, 3, 5, 3, 4], 
+        [5, 4, 6, 6, 6, 6, 4, 5], 
+        [2, 8, 10, 10, 10, 10, 8, 2], 
+        [1, 3, 4, 5, 5, 4, 3, 1], 
+        [1, 2, 10, 4, 4, 10, 2, 1], 
+        [0, 0, 0, 0, 0, 0, 0, 0]
     ], 
-    'B': [
-
+    'b': [
+        [2, 0, 1, 0, 0, 1, 0, 2],
+        [0, 7, 0, 0, 0, 0, 7, 0],
+        [5, 2, 5, 0, 0, 5, 2, 5],
+        [1, 3, 10, 0, 0, 10, 3, 1],
+        [1, 10, 0, 0, 0, 0, 10, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
     ], 
-    'K': [
-
+    'k': [
+        [8, 10, -10, 0, 0, -10, 10, 8],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, -1, -1, -1, -1, 0, 0],
+        [-2, -2, -4, -4, -4, -4, -2, -2],
+        [-4, -4, -6, -6, -6, -6, -4, -4],
+        [-6, -6, -8, -8, -8, -8, -6, -6],
+        [-9, -9, -10, -10, -10, -10, -9, -9],
+        [-10, -10, -15, -15, -15, -15, -10, -10],
     ],
-    'Q': [
+    'q': [
+        [0, 1, 2, 5, 5, 2, 1, 0],
+        [3, 3, 4, 5, 5, 4, 3, 3],
+        [2, 7, 6, 3, 3, 6, 7, 2],
+        [5, 6, 4, 2, 2, 4, 6, 5],
+        [6, 7, 7, 2, 2, 7, 7, 6],
+        [8, 8, 9, 4, 4, 9, 8, 8],
+        [9, 9, 9, 9, 9, 9, 9, 9],
+        [6, 7, 7, 7, 7, 7, 7, 7],
 
     ], 
-    'R': [
-
+    'r': [
+        [2, 0, 5, 5, 5, 5, 0, 2],
+        [4, 0, 5, 5, 5, 5, 0, 4],
+        [6, 0, 3, 3, 3, 3, 0, 6],
+        [8, 0, 2, 2, 2, 2, 0, 8],
+        [6, 0, 3, 3, 3, 3, 0, 6],
+        [6, 5, 5, 5, 5, 5, 5, 6],
+        [8, 8, 8, 8, 8, 8, 8, 8],
+        [10, 9, 8, 10, 10, 8, 9, 10]
     ]
 }
 
+table_base_white = {
+    'P': list(reversed(table_base['p'])),
+    'N': list(reversed(table_base['n'])),
+    'B': list(reversed(table_base['b'])),
+    'R': list(reversed(table_base['r'])),
+    'Q': list(reversed(table_base['q'])),
+    'K': list(reversed(table_base['k'])),
+
+
+}
+
+
+
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8']
+
+uci_move = "e7a8"
+
+#print((numbers.index(uci_move[3:4]) - 1, letters.index(uci_move[2:3])))
+#print(table_base_white['P'])
+to_square_indices = (numbers.index(uci_move[3:4]), letters.index(uci_move[2:3]))
+print(table_base['p'][7 - to_square_indices[0]][to_square_indices[1]])
 
 class Heuristics:
     def __init__(self):
@@ -70,7 +119,7 @@ class Heuristics:
             
         return coordinate_legal_moves, capture_legal_moves, uci_legal_moves, move_object_moves
 
-    def piece_values(self, board: chess.Board):
+    def piece_values(self, board: chess.Board, curTurn):
         material = 0
         for letter in letters:
             for number in numbers:
@@ -81,21 +130,36 @@ class Heuristics:
                         material += piece_material[piece]
                     else:
                         material -= piece_material[piece.upper()]
+                if piece != 'None':
+                    if curTurn == chess.BLACK:
+                        material += -table_base[piece.lower()][7 - numbers.index(number)][letters.index(letter)] / 100
+                    else:
+                        material += table_base_white[piece.upper()][numbers.index(number)][letters.index(letter)] / 100
+                    
         return material
     
     def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
         return center_control.centerControl(board, move_object_moves)
     
-
-    def move_ordering(self, moves, board: chess.Board):
+    def move_ordering(self, moves, board: chess.Board, curTurn):
         moves_scores_list = []
         for move in moves:
             move_score = 0
             uci_move = str(move)
+            to_square_indices = (numbers.index(uci_move[3:4]), letters.index(uci_move[2:3]))
             from_square = str(board.piece_at(chess.parse_square(uci_move[:2]))).upper()
             to_square = str(board.piece_at(chess.parse_square(uci_move[2:4]))).upper()
             if to_square != 'NONE':
                 move_score += piece_material[to_square] - piece_material[from_square]
+
+            if curTurn == chess.BLACK:
+                #print(from_square.lower(), to_square_indices[0], to_square_indices[1])
+                #print(table_base[from_square.lower()][to_square_indices[0]][to_square_indices[1]])
+                move_score += table_base[from_square.lower()][7 - to_square_indices[0]][to_square_indices[1]]
+            else:
+                move_score += table_base_white[from_square][to_square_indices[0]][to_square_indices[1]]
+
+
             moves_scores_list.append((move, move_score))
         return moves_scores_list, len(moves_scores_list)
             
