@@ -90,15 +90,6 @@ table_base_white = {
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8']
-center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"]
-one_squares = ['b', 'c', 'f', 'g']
-
-uci_move = "e7a8"
-
-#print((numbers.index(uci_move[3:4]) - 1, letters.index(uci_move[2:3])))
-#print(table_base_white['P'])
-to_square_indices = (numbers.index(uci_move[3:4]), letters.index(uci_move[2:3]))
-print(table_base['p'][7 - to_square_indices[0]][to_square_indices[1]])
 
 class Heuristics:
     def __init__(self):
