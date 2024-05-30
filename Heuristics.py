@@ -90,6 +90,8 @@ table_base_white = {
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8']
+center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"]
+one_squares = ['b', 'c', 'f', 'g']
 
 uci_move = "e7a8"
 
@@ -162,5 +164,45 @@ class Heuristics:
 
             moves_scores_list.append((move, move_score))
         return moves_scores_list, len(moves_scores_list)
-            
+    
+    def combined_eval(self, board: chess.Board, move_object_moves):
+        material = 0
+        center_control = 0
+        for letter in letters:
+            for number in numbers:
+                square = letter + number
+                piece = str(board.piece_at(chess.parse_square(square)))
+                if piece.lower() != 'k' and piece != 'None':
+                    if piece.isupper():
+                        material += piece_material[piece]
+                    else:
+                        material -= piece_material[piece.upper()]
+                moves = []
+                for center_move in center_moves:
+                    try:
+                        moves.append(chess.Move.from_uci(square + center_move))
+                    except:
+                        pass
+                    #moves = [chess.Move.from_uci(square + center_move) for center_move in center_moves
+                #print(moves)
+                for move in moves:
+                    #try:
+                        is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
+                        if is_pawn:
+                            if (square[0] == "d" or square[0] == "e") and move in move_object_moves:
+                                #print("SQUARE" + str(square[0]))
+                                center_control += 2
+                            elif (square[0] in one_squares) and move in move_object_moves:
+                                center_control += 1
+                        else:
+                            if move in move_object_moves:
+                                #if center_position not in controlled:
+                                center_control += 1
+                                #controlled.append(center_position) # do we need this TODO
+                        # if move in move_object_moves:
+                        #     center_control += 1
+                    #except:
+                    #    pass
+        #print("NUMBER " + str(center_control))         
+        return (material, center_control)
     
