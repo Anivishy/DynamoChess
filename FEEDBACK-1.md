@@ -20,3 +20,8 @@ curate the commits on each branch before putting it up for code review.
   understand what your discoveries have been so far!
 * Teja, I don't see much activity from you. What's going on? I'm marking your contribution down to 6/10, but if I've
   somehow missed the work you've done, please let me know!
+
+## Update
+
+* Teja, thanks for pointing out the Jupyter notebook in which you sketched out the minimax algorithm. I've updated
+  your score to 10/10.
