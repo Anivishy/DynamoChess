@@ -52,37 +52,13 @@ class CenterControlClass:
             return control_score
 
     def centerControl (self, board: chess.Board, move_object_moves):
-        self.center_control = CenterControlClass()
-        #move_object_moves = self.center_control.legal_move_manipulation(board) #check this
-        #rows = [""]
-        # letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
-        # numbers = [1, 2, 3, 4, 5, 6, 7, 8]
-        #controlled = []
-        #self.control_score = 0
-        #ccc = CenterControlClass()
-        # print(move_object_moves)
-        # print(board)
-        #print("__________________________________________")
-        #score = asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
-        #return score
-        #final_score = asyncio.run(ccc.calc_score(move_object_moves, board, ccc))
-        #print(final_score)
-        #return final_score
-        
         seen_starting_squares = []
         control_score = 0
-        for move in move_object_moves:
-            #for center_position in center_moves:
+        for move in move_object_moves[0]:
             move_uci = move.uci()
-            #print(move_uci)
             to_square_str = re.search(r"\d", move_uci)
             to_square_index = to_square_str.start()
             from_square_str = move_uci[:to_square_index + 1]
-            #print("TO: " + move_uci[to_square_index + 1:])
-            #print("FROM: " + from_square)
-            # from_square_square = move.from_square
-            # print(from_square_square)
-            #print(str(board.piece_at(chess.parse_square(str(move)[2:]))))
             is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
             if from_square_str in seen_starting_squares and is_pawn:
                 continue
@@ -98,25 +74,44 @@ class CenterControlClass:
                         #if center_position not in controlled:
                         control_score += 1
                         #controlled.append(center_position) # do we need this TODO
-        return control_score
-        # print(controlled)
-        # print(control_score)
 
-            
-            # target_move = chess.Move.from_uci(str(target_sqare))
-            # board.push(target_move)
-            # coordinate_legal_moves_t, capture_legal_moves_t, uci_legal_moves_t, move_object_moves_t = legal_move_manipulation(board, game_ui)
-            # for move in move_object_moves_t:
-            #     if move.to_square in center_moves:
-            #          contro
+        seen_starting_squares_black = []
+
+        for move in move_object_moves[1]:
+            move_uci = move.uci()
+            to_square_str = re.search(r"\d", move_uci)
+            to_square_index = to_square_str.start()
+            from_square_str = move_uci[:to_square_index + 1]
+
+            is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
+            if from_square_str in seen_starting_squares_black and is_pawn:
+                continue
+            else:
+                seen_starting_squares_black.append(from_square_str)
+                if is_pawn:
+                    if (from_square_str[0] == "d" or from_square_str[0] == "e") and move_uci[to_square_index + 1:] in self.center_moves:
+                        control_score -= 2
+                    elif (from_square_str[0] in self.one_squares) and move_uci[to_square_index + 1:] in self.center_moves:
+                        control_score -= 1
+                else:
+                    if move_uci[to_square_index + 1:] in self.center_moves:
+                        control_score -= 1
+        return control_score
+
                     
-    def legal_move_manipulation(self, board: chess.Board):
+    def legal_move_manipulation(self,board: chess.Board):
         coordinate_legal_moves = []
         capture_legal_moves = []
         uci_legal_moves = []
-        move_object_moves = []
+        move_object_moves = [set(),set()]
+        init_turn = board.turn
+        board.turn = chess.WHITE
         for move in board.legal_moves:
-            move_object_moves.append(move)
+            move_object_moves[0].add(move)
+        board.turn = not board.turn
+        for move in board.legal_moves:
+            move_object_moves[1].add(move)
+        board.turn = init_turn
             # uci_legal_moves.append((str(move)[:2], str(move)[2:]))
             # coord_move = uci_translator(str(move))
             # coordinate_legal_moves.append(coord_move) # these are flipped

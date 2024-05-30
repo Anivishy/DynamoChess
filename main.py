@@ -74,8 +74,10 @@ def game_loop():
 
         if ai_move:
             #board_evaluator(game_ui, ai)
+            start_time = time.time()
             play_best_move(game_ui, ai)
             print("_________________________________")
+            print(f"total execution time: {time.time()-start_time}")
             ai_move = False
             '''
             written_board.turn = chess.BLACK
