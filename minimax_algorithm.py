@@ -74,16 +74,9 @@ class ChessAI():
             
             #print("Black")
             # TODO: Need to look for checkmate here.
-<<<<<<< HEAD
             evaluation += -num_legal_moves * 0.1
             #evaluation += -center_control_heuristic * 0.01
         evaluation += material * 1.25
-=======
-            #evaluation += -num_legal_moves * 0.01
-            evaluation += -center_control_heuristic * 0.09
-        evaluation += self.heuristic.get_king_safety_value(board)
-        evaluation += material * 2
->>>>>>> c73c7fc (king safety heuristic V1 complete)
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
         return evaluation, (material * 2, num_legal_moves * 0.1, '''center_control_heuristic * 0.03, center_control_heuristic''', curTurn, deepcopy(board))
 
