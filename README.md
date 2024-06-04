@@ -1,8 +1,8 @@
 # Dynamo Chess
 ## Overview
-'''
+```
 Testing
-'''
+```
 Potential Problems/Research Areas:
 Possible Database (for first iteration of bot based on elo ratings): https://www.kaggle.com/datasets/datasnaek/chess
 
