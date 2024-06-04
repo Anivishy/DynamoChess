@@ -20,9 +20,9 @@ translator = Translator(all_moves)
 heuristic = Heuristics()
 
        
-def play_best_move(game_ui, ai):
+def play_best_move(game_ui, ai, turn):
     
-    best_move = ai.get_ai_move(written_board, chess.BLACK)
+    best_move = ai.get_ai_move(written_board, turn)
     first_coord, second_coord = translator.uci_to_coordinates(best_move)
     screen_move, promotion, castle_detection = translator.get_move_from_screen(first_coord, second_coord, game_ui.board)
     chess_move = chess.Move.from_uci(best_move)
@@ -47,10 +47,11 @@ def game_loop():
     pgn_moves = []
     turn = 0
     game_ui = UI(size)
-    ai = ChessAI(2, translator, heuristic)
+    ai = ChessAI(3, translator, heuristic)
     game_over = False
     selected_piece = None
-    ai_move = False # change this to true to make computer play as white
+    ai_move = True # change this to true to make computer play as white
+    ai_move_m = chess.WHITE # this needs to be chess.WHITE if ai_move is True
     moves = all_moves.split(' ')
     while not game_over:
         for event in pygame.event.get():
@@ -75,7 +76,7 @@ def game_loop():
         if ai_move:
             #board_evaluator(game_ui, ai)
             start_time = time.time()
-            play_best_move(game_ui, ai)
+            play_best_move(game_ui, ai, ai_move_m)
             print("_________________________________")
             print(f"total execution time: {time.time()-start_time}")
             ai_move = False
