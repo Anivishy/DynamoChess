@@ -8,10 +8,65 @@ class CenterControlClass:
 
     def __init__(self):
         # self.control_score = 0
-        self.center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"]
+        self.center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"] 
+        self.center_moves = [chess.C3, chess.C4, chess.C5, chess.C6, chess.D3, chess.D4, chess.D5, chess.D6, 
+                             chess.E3, chess.E4, chess.E5, chess.E6, chess.F3, chess.F4, chess.F5, chess.F6]
         self.one_squares = ['b', 'c', 'f', 'g']
         
 
+    def centerControl (self, board: chess.Board, move_object_moves):
+        seen_starting_squares = []
+        control_score = 0
+        for center_square in self.center_moves:
+            for attacker in board.attackers(color = chess.WHITE, square = center_square):
+                control_score += 1
+        # print(control_score)
+            # move_uci = move.uci()
+            # to_square_str = re.search(r"\d", move_uci)
+            # to_square_index = to_square_str.start()
+            # from_square_str = move_uci[:to_square_index + 1]
+            # is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
+            # if from_square_str in seen_starting_squares and is_pawn:
+            #     continue
+            # else:
+            #     seen_starting_squares.append(from_square_str)
+            #     if is_pawn:
+            #         if (from_square_str[0] == "d" or from_square_str[0] == "e") and move_uci[to_square_index + 1:] in self.center_moves:
+            #             control_score += 2
+            #         elif (from_square_str[0] in self.one_squares) and move_uci[to_square_index + 1:] in self.center_moves:
+            #             control_score += 1
+            #     else:
+            #         if move_uci[to_square_index + 1:] in self.center_moves:
+            #             #if center_position not in controlled:
+            #             control_score += 1
+            #             #controlled.append(center_position) # do we need this TODO
+
+        seen_starting_squares_black = []
+
+        for center_square in self.center_moves:
+            for attacker in board.attackers(color = chess.BLACK, square = center_square):
+                control_score -= 1
+        # for move in move_object_moves[1]:
+        #     move_uci = move.uci()
+        #     to_square_str = re.search(r"\d", move_uci)
+        #     to_square_index = to_square_str.start()
+        #     from_square_str = move_uci[:to_square_index + 1]
+
+        #     is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
+        #     if from_square_str in seen_starting_squares_black and is_pawn:
+        #         continue
+        #     else:
+        #         seen_starting_squares_black.append(from_square_str)
+        #         if is_pawn:
+        #             if (from_square_str[0] == "d" or from_square_str[0] == "e") and move_uci[to_square_index + 1:] in self.center_moves:
+        #                 control_score -= 2
+        #             elif (from_square_str[0] in self.one_squares) and move_uci[to_square_index + 1:] in self.center_moves:
+        #                 control_score -= 1
+        #         else:
+        #             if move_uci[to_square_index + 1:] in self.center_moves:
+        #                 control_score -= 1
+        return control_score
+    
     async def post_async(self, move, board):
         #center_moves = ["c3", "c4", "c5", "c6", "d3", "d4", "d5", "d6", "e3", "e4", "e5", "e6", "f3", "f4", "f5", "f6"]
         move_score = 0
@@ -50,53 +105,6 @@ class CenterControlClass:
                 result = await coro
                 control_score += result 
             return control_score
-
-    def centerControl (self, board: chess.Board, move_object_moves):
-        seen_starting_squares = []
-        control_score = 0
-        for move in move_object_moves[0]:
-            move_uci = move.uci()
-            to_square_str = re.search(r"\d", move_uci)
-            to_square_index = to_square_str.start()
-            from_square_str = move_uci[:to_square_index + 1]
-            is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
-            if from_square_str in seen_starting_squares and is_pawn:
-                continue
-            else:
-                seen_starting_squares.append(from_square_str)
-                if is_pawn:
-                    if (from_square_str[0] == "d" or from_square_str[0] == "e") and move_uci[to_square_index + 1:] in self.center_moves:
-                        control_score += 2
-                    elif (from_square_str[0] in self.one_squares) and move_uci[to_square_index + 1:] in self.center_moves:
-                        control_score += 1
-                else:
-                    if move_uci[to_square_index + 1:] in self.center_moves:
-                        #if center_position not in controlled:
-                        control_score += 1
-                        #controlled.append(center_position) # do we need this TODO
-
-        seen_starting_squares_black = []
-
-        for move in move_object_moves[1]:
-            move_uci = move.uci()
-            to_square_str = re.search(r"\d", move_uci)
-            to_square_index = to_square_str.start()
-            from_square_str = move_uci[:to_square_index + 1]
-
-            is_pawn = str(board.piece_at(chess.parse_square(str(move)[2:]))).capitalize() == "P"
-            if from_square_str in seen_starting_squares_black and is_pawn:
-                continue
-            else:
-                seen_starting_squares_black.append(from_square_str)
-                if is_pawn:
-                    if (from_square_str[0] == "d" or from_square_str[0] == "e") and move_uci[to_square_index + 1:] in self.center_moves:
-                        control_score -= 2
-                    elif (from_square_str[0] in self.one_squares) and move_uci[to_square_index + 1:] in self.center_moves:
-                        control_score -= 1
-                else:
-                    if move_uci[to_square_index + 1:] in self.center_moves:
-                        control_score -= 1
-        return control_score
 
                     
     def legal_move_manipulation(self,board: chess.Board):

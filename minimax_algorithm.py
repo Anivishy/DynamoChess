@@ -76,9 +76,11 @@ class ChessAI():
         evaluation += (num_legal_moves_white-num_legal_moves_black)* 0.1
 
         center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
-        evaluation += center_control_heuristic*0.01
+        print("CENTER CONTROL: " + str(center_control_heuristic))
+        evaluation += center_control_heuristic*0.1
 
         king_safety_measurment = self.heuristic.get_king_safety_value(board)
+        print("KING SAFTEY: " + str(king_safety_measurment))
         evaluation += king_safety_measurment
 
         evaluation += material * 2
