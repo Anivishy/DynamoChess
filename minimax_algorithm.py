@@ -8,6 +8,7 @@ from pgn_translator import Translator
 from threading import Thread
 import threading
 import random
+import time
 
 class ThreadWithReturnValue(Thread):
     
@@ -37,6 +38,7 @@ class ChessAI():
         self.positions_reg_search = 0
         self.pruning = 0
         self.pruning_captures = 0
+        self.captures_only_depth = 3
 
 
     def sort_partition(self, moves_scores_list, low, high):
@@ -73,30 +75,30 @@ class ChessAI():
 
         board.turn = init_turn
 
-        evaluation += (num_legal_moves_white-num_legal_moves_black)* 0.1
+        #evaluation += (num_legal_moves_white-num_legal_moves_black)* 0.005
 
         center_control_heuristic = self.heuristic.get_center_control_value(board, self.center_contol, move_object_moves)
-        print("CENTER CONTROL: " + str(center_control_heuristic))
-        evaluation += center_control_heuristic*0.1
+        #print("CENTER CONTROL: " + str(center_control_heuristic))
+        evaluation += center_control_heuristic*0.04
 
         king_safety_measurment = self.heuristic.get_king_safety_value(board)
-        print("KING SAFTEY: " + str(king_safety_measurment))
+        #print("KING SAFTEY: " + str(king_safety_measurment))
         evaluation += king_safety_measurment
 
         evaluation += material * 2
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
-        return evaluation, (material * 2, (num_legal_moves_white-num_legal_moves_black) * 0.01, curTurn,  deepcopy(board))
+        return evaluation, (material * 2, (num_legal_moves_white-num_legal_moves_black) * 0.005, center_control_heuristic * 0.04, king_safety_measurment, curTurn,  deepcopy(board))
 
     def captures_only_search(self, curBoard, curTurn, depth, alpha, beta, move_object_moves):
         capture_legal_moves = self.heuristic.legal_move_manipulation(curBoard, self.translator.uci_to_coordinates)[1]
         
         #print(len(capture_legal_moves))
         #print(curBoard.move_stack, depth)
-        if len(capture_legal_moves) == 0 or depth >= self.max_depth + 5:
+        if len(capture_legal_moves) == 0 or depth >= self.max_depth + self.captures_only_depth:
             return (self.get_eval_bar(curBoard, curTurn, move_object_moves), self.first_move(curBoard.move_stack, depth))
         moves_scores_list, moves_length = self.heuristic.move_ordering(capture_legal_moves, curBoard, curTurn)
         self.quick_sort(moves_scores_list, 0, moves_length - 1)
-        print(len(moves_scores_list), depth)
+        #print(len(moves_scores_list), depth)
         #print(capture_legal_moves, curBoard.move_stack)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
@@ -138,10 +140,11 @@ class ChessAI():
         #self.quick_sort(test, 0, len(test) - 1)
         moves_scores_list, moves_length = self.heuristic.move_ordering(curBoard.legal_moves, curBoard, curTurn)
         self.quick_sort(moves_scores_list, 0, moves_length - 1)
-        print(len(moves_scores_list), curDepth)
+        #print(len(moves_scores_list), curDepth)
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
-            highestEval = ((-float(math.inf), None),self.first_move(curBoard.move_stack, curDepth))
+            #print(move_stack, curDepth)
+            highestEval = ((-float(math.inf), None),self.first_move(curBoard.move_stack, curDepth + 1))
             for i in moves_scores_list:
                 curBoard.push(i[0])
                 #################

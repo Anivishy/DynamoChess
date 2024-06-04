@@ -37,14 +37,14 @@ table_base = {
         [0, 7, 0, 0, 0, 0, 7, 0],
         [5, 2, 5, 0, 0, 5, 2, 5],
         [1, 3, 10, 0, 0, 10, 3, 1],
-        [1, 10, 0, 0, 0, 0, 10, 1],
+        [1, 6, 0, 0, 0, 0, 6, 1],
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0]
     ], 
     'k': [
-        [8, 10, -10, 0, 0, -10, 10, 8],
-        [1, 1, 1, 1, 1, 1, 1, 1],
+        [8, 10, -1, 1, 1, -1, 10, 8],
+        [-1, -3, -3, -3, -3, -3, -3, -1],
         [0, 0, -1, -1, -1, -1, 0, 0],
         [-2, -2, -4, -4, -4, -4, -2, -2],
         [-4, -4, -6, -6, -6, -6, -4, -4],
@@ -55,10 +55,10 @@ table_base = {
     'q': [
         [0, 1, 2, 5, 5, 2, 1, 0],
         [3, 3, 4, 5, 5, 4, 3, 3],
-        [2, 7, 6, 3, 3, 6, 7, 2],
-        [5, 6, 4, 2, 2, 4, 6, 5],
-        [6, 7, 7, 2, 2, 7, 7, 6],
-        [8, 8, 9, 4, 4, 9, 8, 8],
+        [2, 2, 2, 3, 3, 2, 2, 2],
+        [1, 2, 2, 2, 2, 2, 2, 1],
+        [3, 1, 1, 0, 0, 1, 1, 3],
+        [2, 2, 2, 3, 3, 2, 2, 2],
         [9, 9, 9, 9, 9, 9, 9, 9],
         [6, 7, 7, 7, 7, 7, 7, 7],
 
@@ -90,6 +90,14 @@ table_base_white = {
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8']
+pieces = ['p', 'n', 'b', 'k', 'q', 'r']
+
+mat = 0
+for letter in letters:
+    for number in numbers:
+        mat += -table_base['p'][7 - numbers.index(number)][letters.index(letter)]
+        mat += table_base_white['P'][7 - numbers.index(number)][letters.index(letter)]
+print(mat)
 
 uci_move = "e7a8"
 
@@ -97,6 +105,8 @@ uci_move = "e7a8"
 #print(table_base_white['P'])
 to_square_indices = (numbers.index(uci_move[3:4]), letters.index(uci_move[2:3]))
 print(table_base['p'][7 - to_square_indices[0]][to_square_indices[1]])
+
+print(table_base_white)
 
 class Heuristics:
     def __init__(self):
@@ -127,15 +137,30 @@ class Heuristics:
                 piece = str(board.piece_at(chess.parse_square(square)))
                 if piece.lower() != 'k' and piece != 'None':
                     if piece.isupper():
+                        
                         material += piece_material[piece]
                     else:
+                        
                         material -= piece_material[piece.upper()]
                 if piece != 'None':
-                    if curTurn == chess.BLACK:
-                        material += -table_base[piece.lower()][7 - numbers.index(number)][letters.index(letter)] / 100
-                    else:
-                        material += table_base_white[piece.upper()][numbers.index(number)][letters.index(letter)] / 100
-                    
+                    if piece.isupper():
+                        #white_piece_square = table_base_white[piece.upper()][7 - numbers.index(number)][letters.index(letter)] / 100
+                        
+                        material += table_base_white[piece.upper()][7 - numbers.index(number)][letters.index(letter)] / 50
+                        #print(white_piece_square, letter, number, piece)
+                    elif piece.islower():
+                        #black_piece_square = -table_base[piece.lower()][7 - numbers.index(number)][letters.index(letter)] / 100
+                        material += -table_base[piece.lower()][7 - numbers.index(number)][letters.index(letter)] / 50
+                        #black_piece_square = -table_base[piece.lower()][7 - numbers.index(number)][letters.index(letter)] / 100
+                        #material += -table_base[piece.lower()][7 - numbers.index(number)][letters.index(letter)] / 100
+                        #print(black_piece_square, letter, number, piece)
+                    #else:
+                        #white_piece_square = table_base_white[piece.upper()][7 - numbers.index(number)][letters.index(letter)] / 100
+                        #material += table_base_white[piece.upper()][7 - numbers.index(number)][letters.index(letter)] / 100
+                        #print(white_piece_square, letter, number, piece)
+        
+        #print(board, material)
+        #print("_______________________")
         return material
     
     def get_center_control_value(self, board: chess. Board, center_control, move_object_moves):
