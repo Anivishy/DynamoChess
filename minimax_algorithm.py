@@ -8,6 +8,9 @@ from pgn_translator import Translator
 from threading import Thread
 import threading
 import random
+import multiprocessing
+from multiprocessing import Pool
+from functools import partial
 
 class ThreadWithReturnValue(Thread):
     
@@ -128,6 +131,25 @@ class ChessAI():
                     self.pruning_captures += 1
                     break
             return lowestEval
+        
+    def thread_spawning_white(self, curBoard, highest_eval, moves_scores_list, curDepth, curTurn, alpha, beta, move_object_moves, move):
+        curBoard.push(move[0])
+        #################
+        #white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
+                                                    #args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
+        #white_minmax_thread.start()
+        #self.white_minmax.append(white_minmax_thread)
+        #minmaxVal = white_minmax_thread.join()
+        self.positions_reg_search += 1
+        minmaxVal = self.minimax_recursive(curBoard, not curTurn, curDepth+1, alpha, beta, move_object_moves)
+        if minmaxVal[0][0]>highestEval[0][0]:
+            highestEval = minmaxVal
+        curBoard.pop()
+        alpha = max(alpha, highestEval[0][0])
+        if beta <= alpha:
+            self.pruning += len(moves_scores_list) ** (curDepth)
+            pass
+        
 
     def minimax_recursive(self,curBoard,curTurn,curDepth, alpha, beta, move_object_moves):
         if curDepth == self.max_depth:
@@ -142,24 +164,29 @@ class ChessAI():
         if curTurn == chess.WHITE:
             move_stack = curBoard.move_stack
             highestEval = ((-float(math.inf), None),self.first_move(curBoard.move_stack, curDepth))
-            for i in moves_scores_list:
-                curBoard.push(i[0])
-                #################
-                #white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
-                                                            #args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
-                #white_minmax_thread.start()
-                #self.white_minmax.append(white_minmax_thread)
-                #minmaxVal = white_minmax_thread.join()
-                self.positions_reg_search += 1
-                minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta, move_object_moves)
-                if minmaxVal[0][0]>highestEval[0][0]:
-                    highestEval = minmaxVal
-                curBoard.pop()
-                alpha = max(alpha, highestEval[0][0])
-                if beta <= alpha:
-                    self.pruning += len(moves_scores_list) ** (curDepth)
-                    break
-            return highestEval
+            with Pool as p:
+                partial_thread_spawning_white = partial(thread_spawning_white, curBoard, highestEval, moves_scores_list, curDepth, 
+                                                        curTurn, alpha, beta, move_object_moves)
+                return p.map(partial_thread_spawning_white, moves_scores_list)
+
+            # for i in moves_scores_list:
+            #     curBoard.push(i[0])
+            #     #################
+            #     #white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
+            #                                                 #args = [curBoard, not curTurn, curDepth + 1, alpha, beta, move_object_moves])
+            #     #white_minmax_thread.start()
+            #     #self.white_minmax.append(white_minmax_thread)
+            #     #minmaxVal = white_minmax_thread.join()
+            #     self.positions_reg_search += 1
+            #     minmaxVal = self.minimax_recursive(curBoard, not curTurn,curDepth+1, alpha, beta, move_object_moves)
+            #     if minmaxVal[0][0]>highestEval[0][0]:
+            #         highestEval = minmaxVal
+            #     curBoard.pop()
+            #     alpha = max(alpha, highestEval[0][0])
+            #     if beta <= alpha:
+            #         self.pruning += len(moves_scores_list) ** (curDepth)
+            #         break
+            # return highestEval
         else:
             move_stack = curBoard.move_stack
             lowestEval = ((float(math.inf), None),self.first_move(curBoard.move_stack, curDepth + 1))
