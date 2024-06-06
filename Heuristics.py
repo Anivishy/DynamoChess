@@ -112,6 +112,12 @@ class Heuristics:
     def __init__(self):
         pass
 
+    def load_nn(self):
+        pass
+
+    def nn_eval(self, initialposition, evaleeposition):
+        pass
+
     def legal_move_manipulation(self, board: chess.Board, uci_translator):
         coordinate_legal_moves = []
         capture_legal_moves = []
