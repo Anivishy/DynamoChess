@@ -1,6 +1,9 @@
 import chess
+import torch
+from neural_net_methods.architecture import SimpleValueNetwork
 from CentControlHeuristic import CenterControlClass
 from KingSafetyHeuristic import KingSafetyHeursitic
+import neural_net_methods.util as util
 
 piece_material = {
     'P': 1,
@@ -113,10 +116,12 @@ class Heuristics:
         pass
 
     def load_nn(self):
-        pass
+        self.nn = SimpleValueNetwork(256)
+        self.nn.load_state_dict(torch.load('./models/10000_batches_filtered_by_2200__256_neurons.pth'))    
 
-    def nn_eval(self, initialposition, evaleeposition):
-        pass
+    def eval_nn(self, initialposition, evaleeposition, material):
+        state = util.return_model_input(initialposition, evaleeposition, material)
+        return self.nn(state)
 
     def legal_move_manipulation(self, board: chess.Board, uci_translator):
         coordinate_legal_moves = []
@@ -134,6 +139,20 @@ class Heuristics:
 
             
         return coordinate_legal_moves, capture_legal_moves, uci_legal_moves, move_object_moves
+
+    def material_values(self, board: chess.Board): # old piece_values function
+        material = 0
+        for letter in letters:
+            for number in numbers:
+                square = letter + number
+                piece = str(board.piece_at(chess.parse_square(square)))
+                if piece.lower() != 'k' and piece != 'None':
+                    if piece.isupper():
+                        material += piece_material[piece]
+                    else:
+                        material -= piece_material[piece.upper()]
+                    
+        return material
 
     def piece_values(self, board: chess.Board, curTurn):
         material = 0

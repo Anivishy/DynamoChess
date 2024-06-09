@@ -86,6 +86,27 @@ class ChessAI():
         evaluation += king_safety_measurment
 
         evaluation += material * 2
+
+        prev_board = deepcopy(board)
+        prev_board.pop()
+
+        if prev_board.turn == chess.BLACK:
+            prev_board = prev_board.mirror()
+            evalee_board = board.mirror()
+        else:
+            evalee_board = board
+
+        material_whited = self.heuristic.material_values(evalee_board)
+
+        nn_eval = self.heuristic.eval_nn(prev_board, evalee_board, material_whited).item()
+
+        if curTurn == chess.BLACK:
+            nn_eval = -nn_eval 
+        
+        print("NN EVAL: " + str(nn_eval))
+
+        evaluation += nn_eval * 3
+
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
         return evaluation, (material * 2, (num_legal_moves_white-num_legal_moves_black) * 0.005, center_control_heuristic * 0.04, king_safety_measurment, curTurn,  deepcopy(board))
 
@@ -131,7 +152,7 @@ class ChessAI():
                     break
             return lowestEval
 
-    def minimax_recursive(self,curBoard,curTurn,curDepth, alpha, beta, move_object_moves):
+    def minimax_recursive(self, curBoard,curTurn,curDepth, alpha, beta, move_object_moves):
         if curDepth == self.max_depth:
             return (self.captures_only_search(curBoard, curTurn, curDepth, alpha, beta, move_object_moves))
             #return (self.get_eval_bar(curBoard, curTurn, move_object_moves),self.first_move(curBoard.move_stack, self.max_depth)) # TODO: Switch this to evluating all captures
@@ -146,6 +167,7 @@ class ChessAI():
             #print(move_stack, curDepth)
             highestEval = ((-float(math.inf), None),self.first_move(curBoard.move_stack, curDepth + 1))
             for i in moves_scores_list:
+                
                 curBoard.push(i[0])
                 #################
                 #white_minmax_thread = ThreadWithReturnValue(target = self.minimax_recursive, 
