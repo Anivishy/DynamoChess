@@ -1,5 +1,7 @@
 import chess
 import chess.pgn
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import time
 from ui import UI
@@ -47,7 +49,7 @@ def game_loop():
     pgn_moves = []
     turn = 0
     game_ui = UI(size)
-    ai = ChessAI(2, translator, heuristic)
+    ai = ChessAI(3, translator, heuristic)
     game_over = False
     selected_piece = None
     ai_move = False # change this to true to make computer play as white
