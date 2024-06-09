@@ -35,9 +35,9 @@ class KingSafetyHeursitic:
         #the range of this normalization is [-2,2]
 
         if king_safety_constant<0:
-            king_safety_constant = max(king_safety_constant,-20)/10
+            king_safety_constant = max(king_safety_constant,-100)/100
         else:
-            king_safety_constant = min(king_safety_constant,20)/10
+            king_safety_constant = min(king_safety_constant,100)/100
         if color == chess.BLACK:
             king_safety_constant*=-1
 
