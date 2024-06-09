@@ -96,7 +96,7 @@ uci_move = "e7a8"
 #print((numbers.index(uci_move[3:4]) - 1, letters.index(uci_move[2:3])))
 #print(table_base_white['P'])
 to_square_indices = (numbers.index(uci_move[3:4]), letters.index(uci_move[2:3]))
-print(table_base['p'][7 - to_square_indices[0]][to_square_indices[1]])
+# print(table_base['p'][7 - to_square_indices[0]][to_square_indices[1]])
 
 class Heuristics:
     def __init__(self):
