@@ -117,7 +117,7 @@ class Heuristics:
 
     def load_nn(self):
         self.nn = SimpleValueNetwork(256)
-        self.nn.load_state_dict(torch.load('./models/10000_batches_filtered_by_2200__256_neurons.pth'))    
+        self.nn.load_state_dict(torch.load('./trained_models/256_neurons_filter_by_2200.pth'))    
 
     def eval_nn(self, initialposition, evaleeposition, material):
         state = util.return_model_input(initialposition, evaleeposition, material)
