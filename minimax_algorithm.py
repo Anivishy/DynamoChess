@@ -105,7 +105,12 @@ class ChessAI():
         
         print("NN EVAL: " + str(nn_eval))
 
-        evaluation += nn_eval * 3
+        
+        cur_game_length = len(board.move_stack)
+        decay = .5
+
+
+        evaluation += nn_eval * 3 * (decay ** cur_game_length)
 
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
         return evaluation, (material * 2, (num_legal_moves_white-num_legal_moves_black) * 0.005, center_control_heuristic * 0.04, king_safety_measurment, curTurn,  deepcopy(board))
