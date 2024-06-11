@@ -87,31 +87,34 @@ class ChessAI():
 
         evaluation += material * 2
 
-        prev_board = deepcopy(board)
-        prev_board.pop()
+        # nn stuff un comment for neural net addition
 
-        if prev_board.turn == chess.BLACK:
-            prev_board = prev_board.mirror()
-            evalee_board = board.mirror()
-        else:
-            evalee_board = board
 
-        material_whited = self.heuristic.material_values(evalee_board)
+        # prev_board = deepcopy(board)
+        # prev_board.pop()
 
-        nn_eval = self.heuristic.eval_nn(prev_board, evalee_board, material_whited).item()
+        # if curTurn == chess.WHITE:
+        #     prev_board = prev_board.mirror()
+        #     evalee_board = board.mirror()
+        # else:
+        #     evalee_board = board
 
-        if curTurn == chess.BLACK:
-            nn_eval = -nn_eval 
+        # material_whited = self.heuristic.material_values(evalee_board)
+
+        # nn_eval = self.heuristic.eval_nn(prev_board, evalee_board, material_whited).item()
+
+        # if curTurn == chess.WHITE:
+        #     nn_eval = -nn_eval 
         
-        print("NN EVAL: " + str(nn_eval))
-
+        # #print("NN EVAL: " + str(nn_eval))
         
-        cur_game_length = len(board.move_stack)
-        decay = .5
+        # cur_game_length = len(board.move_stack)
+        # decay = .7
+
+        # evaluation += nn_eval * 100 * (decay ** cur_game_length)
 
 
-        evaluation += nn_eval * 3 * (decay ** cur_game_length)
-
+        # nn stuff end
         #print(material * 2, num_legal_moves * 0.02, center_control_heuristic * 0.075)
         return evaluation, (material * 2, (num_legal_moves_white-num_legal_moves_black) * 0.005, center_control_heuristic * 0.04, king_safety_measurment, curTurn,  deepcopy(board))
 
