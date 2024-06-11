@@ -109,9 +109,9 @@ class ChessAI():
         # #print("NN EVAL: " + str(nn_eval))
         
         # cur_game_length = len(board.move_stack)
-        # decay = .7
+        # decay = .65 # the lower the decay the faster the nn eval gets ignored
 
-        # evaluation += nn_eval * 100 * (decay ** cur_game_length)
+        # evaluation += nn_eval * (decay ** cur_game_length)
 
 
         # nn stuff end
